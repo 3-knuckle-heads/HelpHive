@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Navbar from "./components/Navbar";
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import About_US from "./pages/About-Us";
 import Home from "./pages/Home";
@@ -10,7 +9,6 @@ function App() {
   return (
     <div>
       <Navbar />
-      <br />
       <BrowserRouter>
         <Routes>
           <Route index element={<Home />} />

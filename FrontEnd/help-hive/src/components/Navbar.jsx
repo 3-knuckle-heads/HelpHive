@@ -3,13 +3,16 @@ import helphiveLogo from "../assets/helphive.png";
 
 function Navbar() {
   return (
-    <header className="shadow mb-2 px-4">
+    <header className="shadow mb-1 px-4">
       <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center">
-        <a className="text-2xl flex items-center" href="./">
+        <a
+          className="text-2xl flex flex-col sm:flex-row sm:items-center"
+          href="./"
+        >
           <span className="size-20">
             <img src={helphiveLogo} className="logo" />
           </span>
-          <span className="text-black font-bold px-2 mb-1 lg:mb-2 text-xl md:text-2xl lg:text-3xl">
+          <span className="text-gray-600 font-medium px-2 text-3xl mb-5 sm:mb-3">
             Volunteer Network
           </span>
         </a>
@@ -34,7 +37,7 @@ function Navbar() {
           aria-label="Header Navigation"
           className="peer-checked:block md:block hidden"
         >
-          <ul className="flex flex-col gap-y-4 md:flex-row gap-x-2 lg:gap-x-6">
+          <ul className="flex flex-col gap-y-4 md:flex-row gap-x-4 lg:gap-x-6">
             <li className="">
               <a
                 href="/contact"
