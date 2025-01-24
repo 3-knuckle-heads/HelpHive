@@ -37,7 +37,7 @@ function Navbar() {
           aria-label="Header Navigation"
           className="peer-checked:block md:block hidden"
         >
-          <ul className="flex flex-col gap-y-4 md:flex-row gap-x-4 lg:gap-x-6">
+          <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6">
             <li className="">
               <a
                 href="/contact"
