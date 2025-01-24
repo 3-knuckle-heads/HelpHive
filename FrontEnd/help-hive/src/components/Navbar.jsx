@@ -30,7 +30,10 @@ function Navbar() {
             />
           </svg>
         </label>
-        <nav className="peer-checked:block md:block hidden">
+        <nav
+          aria-label="Header Navigation"
+          className="peer-checked:block md:block hidden"
+        >
           <ul className="flex flex-col gap-y-4 md:flex-row gap-x-2 lg:gap-x-6">
             <li className="">
               <a href="#" className="text-gray-600 hover:text-orange-400">
