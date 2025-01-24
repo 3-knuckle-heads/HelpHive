@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import reactLogo from '../assets/react.svg'
-import helphiveLogo from '../assets/helphive.png'
-import './Home.css'
+import '../App.css'
 
 function Home() {
     const [count, setCount] = useState(0)
@@ -10,9 +9,6 @@ function Home() {
     <div>
     <h2>HelpHive | Volunteer management</h2>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={helphiveLogo} className="logo" alt="Vite logo" />
-        </a>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
