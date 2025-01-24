@@ -5,7 +5,7 @@ function Navbar() {
   return (
     <header className="shadow mb-2 px-4">
       <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center">
-        <a className="text-2xl flex items-center" href="#">
+        <a className="text-2xl flex items-center" href="./">
           <span className="size-20">
             <img src={helphiveLogo} className="logo" />
           </span>
@@ -36,18 +36,21 @@ function Navbar() {
         >
           <ul className="flex flex-col gap-y-4 md:flex-row gap-x-2 lg:gap-x-6">
             <li className="">
-              <a href="#" className="text-gray-600 hover:text-orange-400">
+              <a
+                href="/contact"
+                className="text-gray-600 hover:text-orange-400"
+              >
                 Contact
               </a>
             </li>
             <li className="">
-              <a href="#" className="text-gray-600 hover:text-orange-400">
+              <a href="/about" className="text-gray-600 hover:text-orange-400">
                 About
               </a>
             </li>
             <li className="mt-2 md:mt-0">
               <a
-                href="#"
+                href="/login"
                 className="border-2 px-4 py-2 rounded-2xl border-orange-500 font-semibold text-orange-500 hover:text-blue-500 hover:border-blue-500"
               >
                 Log in
