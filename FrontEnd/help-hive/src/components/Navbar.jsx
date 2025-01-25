@@ -3,7 +3,7 @@ import helphiveLogo from "../assets/helphive.png";
 
 function Navbar() {
   return (
-    <header className="shadow mb-1 px-4">
+    <header className="shadow mb-0.5 px-4">
       <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center">
         <a
           className="text-2xl flex flex-col sm:flex-row sm:items-center"
@@ -47,7 +47,10 @@ function Navbar() {
               </a>
             </li>
             <li className="">
-              <a href="/about" className="text-gray-600 hover:text-orange-400 text-lg">
+              <a
+                href="/about"
+                className="text-gray-600 hover:text-orange-400 text-lg"
+              >
                 About
               </a>
             </li>
