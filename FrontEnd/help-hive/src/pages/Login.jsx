@@ -7,7 +7,7 @@ const LoginPage = () => {
   
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email('Invalid email address')
+      .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'Email must be a valid Gmail address (e.g., jannatul@gmail.com)')
       .required('Email is required'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
