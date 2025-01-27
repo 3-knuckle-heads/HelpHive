@@ -1,42 +1,32 @@
 import React, { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isSignup, setIsSignup] = useState(false); 
+  const [isSignup, setIsSignup] = useState(false);
+  
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    password: Yup.string()
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .when('isSignup', {
+        is: true,
+        then: (schema) => schema.required('Confirm Password is required'),
+      }),
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-
-
-    
-    if (!email || !password || regex) {
-      setError('Both email and password are required!');
-      return;
-    }
-
-    setError('');
-    setLoading(true);
-
-   
+  const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setTimeout(() => {
-      setLoading(false);
-      console.log('Email:', email);
-      console.log('Password:', password);
+      console.log('Form Values:', values);
       alert(`${isSignup ? 'Sign up' : 'Login'} successful!`);
+      setSubmitting(false);
+      resetForm();
     }, 2000);
-  };
-
-  const toggleForm = () => {
-    setIsSignup(!isSignup);
-    setEmail('');
-    setPassword('');
-    setError('');
   };
 
   return (
@@ -46,81 +36,63 @@ const LoginPage = () => {
           {isSignup ? 'Sign Up' : 'Login'}
         </h2>
 
-      
-        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
+        <Formik
+          initialValues={{ email: '', password: '', confirmPassword: '' }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
+                <Field
+                  type="email"
+                  name="email"
+                  className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your email"
+                />
+                <ErrorMessage name="email" component="p" className="text-red-500 text-sm mt-1" />
+              </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+              <div className="mb-4">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-600">Password</label>
+                <Field
+                  type="password"
+                  name="password"
+                  className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your password"
+                />
+                <ErrorMessage name="password" component="p" className="text-red-500 text-sm mt-1" />
+              </div>
 
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-600">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+              {isSignup && (
+                <div className="mb-4">
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-600">Confirm Password</label>
+                  <Field
+                    type="password"
+                    name="confirmPassword"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Confirm your password"
+                  />
+                  <ErrorMessage name="confirmPassword" component="p" className="text-red-500 text-sm mt-1" />
+                </div>
+              )}
 
-          {/* If it's signup, show additional fields like "Confirm Password" */}
-          {isSignup && (
-            <div className="mb-6">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-600">Confirm Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Confirm your password"
-                required
-              />
-            </div>
+              <button
+                type="submit"
+                className={`w-full py-3 ${isSubmitting ? 'bg-gray-400' : 'bg-blue-600'} text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Processing...' : isSignup ? 'Sign Up' : 'Login'}
+              </button>
+            </Form>
           )}
-
-          <button
-            type="submit"
-            className={`w-full py-3 ${loading ? 'bg-gray-400' : 'bg-blue-600'} text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            disabled={loading}
-          >
-            {loading ? (
-              <svg className="animate-spin h-5 w-5 mr-3 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 1 1 16 0 8 8 0 0 1-16 0z"></path>
-              </svg>
-            ) : (
-              isSignup ? 'Sign Up' : 'Login'
-            )}
-          </button>
-        </form>
+        </Formik>
 
         <div className="text-center mt-4">
-          <a
-            href="#"
-            className="text-sm text-blue-500 hover:underline"
-            onClick={toggleForm}
-          >
+          <button onClick={() => setIsSignup(!isSignup)} className="text-sm text-blue-500 hover:underline">
             {isSignup ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
-          </a>
-        </div>
-
-        <div className="text-center mt-4">
-          <a href="#" className="text-sm text-blue-500 hover:underline">Forgot password?</a>
+          </button>
         </div>
       </div>
     </div>
