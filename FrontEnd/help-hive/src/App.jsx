@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import About_US from "./pages/About-Us";
 import Home from "./pages/Home";
+import Explore from "./pages/Explore.jsx"; 
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -15,6 +16,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={<Home />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/about" element={<About_US />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
