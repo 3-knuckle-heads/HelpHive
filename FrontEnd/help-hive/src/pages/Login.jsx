@@ -10,8 +10,12 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+
+
     
-    if (!email || !password) {
+    if (!email || !password || regex) {
       setError('Both email and password are required!');
       return;
     }
