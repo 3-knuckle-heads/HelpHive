@@ -1,18 +1,8 @@
-import React from 'react'
-import search_bar from '../components/search_bar'
+import React from "react";
+import Search_bar from "../components/search_bar";
 
 const Explore = () => {
+  return <Search_bar />;
+};
 
-  return (
-    
-
-      <SearchBar />
-   
-
-    
-  
-  )
-}
-
-export default Explore
-
+export default Explore;
