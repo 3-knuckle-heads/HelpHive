@@ -1,5 +1,6 @@
 import "../App.css";
 import bgImage from "../assets/BG.jpg";
+import Button from "../components/Button";
 
 function Home() {
   return (
@@ -22,15 +23,10 @@ function Home() {
         </p>
       </header>
       <main className="text-center">
-        <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-          <button className="bg-orange-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-orange-600 transition">
-            Explore
-          </button>
-          <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition">
-            Join us
-          </button>
-        </div>
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6 mt-6">
+        {
+
+        <Button/>}
+         <h2 className="text-3xl font-semibold text-gray-800 mb-6 mt-6">
           Why us?
         </h2>
         <p className="text-gray-600 mb-8 max-w-xl">
