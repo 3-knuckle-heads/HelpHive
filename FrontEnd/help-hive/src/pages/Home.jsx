@@ -1,4 +1,3 @@
-import "../App.css";
 import bgImage from "../assets/BG.jpg";
 import Button from "../components/Button";
 
@@ -23,10 +22,8 @@ function Home() {
         </p>
       </header>
       <main className="text-center">
-        {
-
-        <Button/>}
-         <h2 className="text-3xl font-semibold text-gray-800 mb-6 mt-6">
+        {<Button />}
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6 mt-6">
           Why us?
         </h2>
         <p className="text-gray-600 mb-8 max-w-xl">

@@ -1,7 +1,5 @@
 import { useState } from "react";
 import Navbar from "./components/Navbar";
-import search_bar from "./components/search_bar.jsx";
-import Button from "./components/Button.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import About_US from "./pages/About-Us";
 import Home from "./pages/Home";
