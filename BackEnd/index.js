@@ -20,7 +20,7 @@ app.get("/api/faq",async(req,res)=>
         return; 
       }
       if(question && question.length){
-        const OPENAI_API_KEY = "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"
+       
         const openai = new OpenAI({apiKey:OPENAI_API_KEY});
         const ai_model = "gpt-3.5-turbo-1106";
 
