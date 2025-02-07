@@ -8,7 +8,6 @@ const ProfilePage = ({ user, onLogout }) => {
 
   const handleSave = () => {
     setEditMode(false);
-    // Here you could make an API call to save the updated user data
     console.log('Updated User:', updatedUser);
   };
 
@@ -29,20 +28,20 @@ const ProfilePage = ({ user, onLogout }) => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">User Profile</h2>
-
-        <div className="mb-4 flex justify-center">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 p-6 w-screen h-screen">
+      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-6xl relative h-full flex flex-col justify-center">
+        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-6">User Profile</h2>
+        
+        <div className="absolute top-6 right-6 w-24 h-24">
           <img
             src={updatedUser.profilePic}
             alt="Profile"
-            className="w-32 h-32 rounded-full object-cover"
+            className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
           />
         </div>
 
         {editMode && (
-          <div className="mb-4">
+          <div className="mb-4 mt-16">
             <label htmlFor="profilePic" className="block text-sm font-medium text-gray-600">Profile Picture</label>
             <input
               type="file"
@@ -54,27 +53,29 @@ const ProfilePage = ({ user, onLogout }) => {
           </div>
         )}
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">Full Name</label>
-          {editMode ? (
-            <input
-              type="text"
-              name="name"
-              value={updatedUser.name}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md mt-2"
-            />
-          ) : (
-            <p>{updatedUser.name}</p>
-          )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+          <div>
+            <label className="block text-sm font-medium text-gray-600">Full Name</label>
+            {editMode ? (
+              <input
+                type="text"
+                name="name"
+                value={updatedUser.name}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md mt-2"
+              />
+            ) : (
+              <p className="text-lg font-medium">{updatedUser.name}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600">Email</label>
+            <p className="text-lg font-medium">{updatedUser.email}</p>
+          </div>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">Email</label>
-          <p>{updatedUser.email}</p>
-        </div>
-
-        <div className="mb-4">
+        <div className="mt-4">
           <label className="block text-sm font-medium text-gray-600">Date of Birth</label>
           <input
             type="date"
@@ -87,20 +88,20 @@ const ProfilePage = ({ user, onLogout }) => {
         </div>
 
         {editMode && (
-          <div className="mb-4">
+          <div className="mt-6">
             <button
               onClick={handleSave}
-              className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full py-3 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               Save Changes
             </button>
           </div>
         )}
 
-        <div className="text-center">
+        <div className="text-center mt-6">
           <button
             onClick={onLogout}
-            className="text-sm text-blue-500 hover:underline"
+            className="text-sm text-red-500 hover:underline"
           >
             Logout
           </button>

@@ -7,7 +7,7 @@ import Explore from "./pages/Explore.jsx";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import ProfilePage from "./pages/profile_page.jsx";  
-// import Signup from "./pages/Signup";
+
 
 function App() {
   const [user, setUser] = useState(null); // Track the user state (null means not logged in)
