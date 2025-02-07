@@ -1,13 +1,14 @@
 import React from "react";
+import { Outlet, Link } from "react-router-dom";
 import helphiveLogo from "../assets/helphive.png";
 
 function Navbar() {
   return (
     <header className="shadow mb-0.5 px-4">
       <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center md:h-20">
-        <a
+        <Link
           className="text-2xl flex flex-col sm:flex-row sm:items-center"
-          href="./"
+          to="./"
         >
           <span className="size-20 md:pt-1.5">
             <img src={helphiveLogo} className="logo" />
@@ -15,7 +16,7 @@ function Navbar() {
           {/* <span className="text-gray-600 font-medium px-2 text-3xl mb-5 sm:mb-3">
             Volunteer Network
           </span> */}
-        </a>
+        </Link>
         <input className="peer hidden" type="checkbox" id="nav-open" />
         <label className="absolute right-2 mt-6 md:hidden" htmlFor="nav-open">
           <svg
@@ -39,37 +40,37 @@ function Navbar() {
         >
           <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6">
             <li className="">
-              <a
-                href="/Explore"
+              <Link
+                to="/Explore"
                 className="text-gray-600 hover:text-orange-400 text-lg"
               >
                 Explore
-              </a>
+              </Link>
             </li>
             {/* <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6"> */}
             <li className="">
-              <a
-                href="/contact"
+              <Link
+                to="/contact"
                 className="text-gray-600 hover:text-orange-400 text-lg"
               >
                 Contact
-              </a>
+              </Link>
             </li>
             <li className="">
-              <a
-                href="/about"
+              <Link
+                to="/about"
                 className="text-gray-600 hover:text-orange-400 text-lg"
               >
                 About
-              </a>
+              </Link>
             </li>
             <li className="mt-2 md:mt-0">
-              <a
-                href="/login"
+              <Link
+                to="/login"
                 className="border-2 px-4 py-2 rounded-2xl border-orange-500 font-semibold text-orange-500 hover:text-blue-500 hover:border-blue-500 text-lg"
               >
                 Log in
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
