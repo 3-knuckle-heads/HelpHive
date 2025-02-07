@@ -4,12 +4,12 @@ import helphiveLogo from "../assets/helphive.png";
 function Navbar() {
   return (
     <header className="shadow mb-0.5 px-4">
-      <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center">
+      <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center md:h-20">
         <a
           className="text-2xl flex flex-col sm:flex-row sm:items-center"
           href="./"
         >
-          <span className="size-20">
+          <span className="size-20 md:pt-1.5">
             <img src={helphiveLogo} className="logo" />
           </span>
           {/* <span className="text-gray-600 font-medium px-2 text-3xl mb-5 sm:mb-3">
@@ -46,7 +46,7 @@ function Navbar() {
                 Explore
               </a>
             </li>
-          {/* <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6"> */}
+            {/* <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6"> */}
             <li className="">
               <a
                 href="/contact"
