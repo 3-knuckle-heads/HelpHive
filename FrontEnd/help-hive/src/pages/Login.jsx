@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
+
 const LoginPage = ({ onLoginSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);
 
@@ -84,8 +85,7 @@ const LoginPage = ({ onLoginSuccess }) => {
                   <ErrorMessage name="confirmPassword" component="p" className="text-red-500 text-sm mt-1" />
                 </div>
               )}
-
-              <button
+    <button
                 type="submit"
                 className={`w-full py-3 ${isSubmitting ? 'bg-gray-400' : 'bg-blue-600'} text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 disabled={isSubmitting}

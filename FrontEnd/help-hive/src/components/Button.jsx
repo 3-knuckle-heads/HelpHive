@@ -9,7 +9,9 @@ const Button = () => {
     <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition">
       Join us
     </button>
+
   </div>
+
   )
 }
 

@@ -29,11 +29,11 @@ function App() {
           <Route path="/explore" element={<Explore />} />
           <Route path="/about" element={<About_US />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+          {/* <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} /> */}
           
         
           <Route 
-            path="/profile" 
+            path="/login" 
             element={user ? <ProfilePage user={user} onLogout={handleLogout} /> : <Login onLoginSuccess={handleLoginSuccess} />}
           />
 
