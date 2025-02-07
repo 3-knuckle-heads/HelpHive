@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-const LoginPage = () => {
+const LoginPage = ({ onLoginSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);
-  
+
   const validationSchema = Yup.object({
     email: Yup.string()
-      .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'Email must be a valid Gmail address (e.g., jannatul@gmail.com)')
+      .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'Email must be a valid Gmail address')
       .required('Email is required'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
@@ -22,8 +22,15 @@ const LoginPage = () => {
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setTimeout(() => {
-      console.log('Form Values:', values);
-      alert(`${isSignup ? 'Sign up' : 'Login'} successful!`);
+      const userData = {
+        email: values.email,
+        name: 'John Doe',
+        profilePic: 'https://via.placeholder.com/150',
+        skills: ['JavaScript', 'React', 'CSS'],
+        events: [{ title: 'Tech Conference', role: 'Volunteer' }],
+      };
+
+      onLoginSuccess(userData);  // Pass user data to parent component
       setSubmitting(false);
       resetForm();
     }, 2000);
