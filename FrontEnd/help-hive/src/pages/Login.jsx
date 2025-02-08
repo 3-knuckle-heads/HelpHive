@@ -31,24 +31,48 @@ const Login = ({ onLoginSuccess }) => {
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setTimeout(() => {
-      const userData = {
-        email: values.email,
-        password: values.password,
-        fullName: isSignup ? values.fullName : undefined,
-        role: isSignup ? values.role : undefined,
-        dateOfBirth: isSignup ? values.dateOfBirth : undefined,
-        profilePic: values.profilePic || "", 
-      };
-
-      // Simulate API call for login/signup
-      onLoginSuccess(userData); 
-
+      const storedUserData = JSON.parse(localStorage.getItem("userData")) || {};
+  
+      if (isSignup) {
+        // Check if the user already exists
+        if (storedUserData[values.email]) {
+          alert("User with this email already exists.");
+          setSubmitting(false);
+          return;
+        }
+  
+        // Create a new profile
+        storedUserData[values.email] = {
+          email: values.email,
+          password: values.password,
+          fullName: values.fullName,
+          role: values.role,
+          dateOfBirth: values.dateOfBirth,
+          profilePic: values.profilePic || "", 
+        };
+  
+        localStorage.setItem("userData", JSON.stringify(storedUserData));
+  
+        // Simulate API call for signup
+        onLoginSuccess(storedUserData[values.email]);
+        navigate("/profile");
+  
+      } else {
+        // Check if the user exists for login
+        if (storedUserData[values.email] && storedUserData[values.email].password === values.password) {
+          // Simulate API call for login
+          onLoginSuccess(storedUserData[values.email]);
+          navigate("/");
+        } else {
+          alert("Invalid email or password.");
+        }
+      }
+  
       setSubmitting(false);
       resetForm();
-
-      navigate("/profile");
     }, 2000);
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -68,7 +92,7 @@ const Login = ({ onLoginSuccess }) => {
           validationSchema={validationSchema(isSignup)}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, setFieldValue, values }) => (
+          {({ isSubmitting, setFieldValue }) => (
             <Form>
               {isSignup && (
                 <>
