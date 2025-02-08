@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const LoginPage = ({ onLoginSuccess }) => {
+const Login = ({ onSignupSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);
 
   const validationSchema = Yup.object({
+    fullName: Yup.string().required("Full name is required"),
     email: Yup.string()
-      .matches(
-        /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
-        "Email must be a valid Gmail address"
-      )
+      .email("Invalid email address")
       .required("Email is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
@@ -21,19 +19,18 @@ const LoginPage = ({ onLoginSuccess }) => {
         is: true,
         then: (schema) => schema.required("Confirm Password is required"),
       }),
+    role: Yup.string().required("Please select a role"),
   });
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setTimeout(() => {
       const userData = {
+        fullName: values.fullName,
         email: values.email,
-        name: "John Doe",
-        profilePic: "",
-        skills: ["Heavy lifting"],
-        events: [{ title: "Tech Conference", role: "Volunteer" }],
+        role: values.role,
       };
 
-      onLoginSuccess(userData); // Pass user data to parent component
+      onSignupSuccess(userData);
       setSubmitting(false);
       resetForm();
     }, 2000);
@@ -47,98 +44,86 @@ const LoginPage = ({ onLoginSuccess }) => {
         </h2>
 
         <Formik
-          initialValues={{ email: "", password: "", confirmPassword: "" }}
+          initialValues={{ fullName: "", email: "", password: "", confirmPassword: "", role: "" }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
             <Form>
+              {isSignup && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600">Full Name</label>
+                  <Field
+                    type="text"
+                    name="fullName"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your full name"
+                  />
+                  <ErrorMessage name="fullName" component="p" className="text-red-500 text-sm mt-1" />
+                </div>
+              )}
+
               <div className="mb-4">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  Email
-                </label>
+                <label className="block text-sm font-medium text-gray-600">Email</label>
                 <Field
                   type="email"
                   name="email"
-                  className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your email"
                 />
-                <ErrorMessage
-                  name="email"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
+                <ErrorMessage name="email" component="p" className="text-red-500 text-sm mt-1" />
               </div>
 
               <div className="mb-4">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  Password
-                </label>
+                <label className="block text-sm font-medium text-gray-600">Password</label>
                 <Field
                   type="password"
                   name="password"
-                  className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
                 />
-                <ErrorMessage
-                  name="password"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
-                />
+                <ErrorMessage name="password" component="p" className="text-red-500 text-sm mt-1" />
               </div>
 
               {isSignup && (
                 <div className="mb-4">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-gray-600"
-                  >
-                    Confirm Password
-                  </label>
+                  <label className="block text-sm font-medium text-gray-600">Confirm Password</label>
                   <Field
                     type="password"
                     name="confirmPassword"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500"
                     placeholder="Confirm your password"
                   />
-                  <ErrorMessage
-                    name="confirmPassword"
-                    component="p"
-                    className="text-red-500 text-sm mt-1"
-                  />
+                  <ErrorMessage name="confirmPassword" component="p" className="text-red-500 text-sm mt-1" />
                 </div>
               )}
+              
+              {isSignup && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600">Role</label>
+                  <Field as="select" name="role" className="w-full p-3 border border-gray-300 rounded-md mt-2">
+                    <option value="">Select Role</option>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="eventHost">Event Host</option>
+                  </Field>
+                  <ErrorMessage name="role" component="p" className="text-red-500 text-sm mt-1" />
+                </div>
+              )}
+
               <button
                 type="submit"
-                className={`w-full py-3 ${
-                  isSubmitting ? "bg-gray-400" : "bg-blue-600"
-                } text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                className={`w-full py-3 ${isSubmitting ? "bg-gray-400" : "bg-blue-600"} text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500`}
                 disabled={isSubmitting}
               >
-                {isSubmitting
-                  ? "Processing..."
-                  : isSignup
-                  ? "Sign Up"
-                  : "Login"}
+                {isSubmitting ? "Processing..." : isSignup ? "Sign Up" : "Login"}
               </button>
             </Form>
           )}
         </Formik>
 
         <div className="text-center mt-4">
-          <button
-            onClick={() => setIsSignup(!isSignup)}
-            className="text-sm text-blue-500 hover:underline"
-          >
-            {isSignup
-              ? "Already have an account? Login"
-              : "Don't have an account? Sign Up"}
+          <button onClick={() => setIsSignup(!isSignup)} className="text-sm text-blue-500 hover:underline">
+            {isSignup ? "Already have an account? Login" : "Don't have an account? Sign Up"}
           </button>
         </div>
       </div>
@@ -146,4 +131,4 @@ const LoginPage = ({ onLoginSuccess }) => {
   );
 };
 
-export default LoginPage;
+export default Login;
