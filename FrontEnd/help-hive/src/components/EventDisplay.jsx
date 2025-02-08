@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import { UpdateEvent } from "../components/events";
+import { useNavigate } from "react-router-dom";
 
 const EventDisplay = ({ event }) => {
+  const navigate = useNavigate();
   const [thisEvent, setThisEvent] = useState(event);
 
   function RespondButtonHandler() {
     setThisEvent((prevEvent) => {
       const updatedEvent = {
         ...prevEvent,
-        responded: prevEvent.responded == "0" ? 1 : prevEvent.responded + 1,
+        responded: parseInt(prevEvent.responded) + 1,
       };
 
       UpdateEvent(updatedEvent);
       return updatedEvent;
     });
+  }
+
+  function DetailsButtonHandler() {
+    navigate("/eventview/" + thisEvent.id);
   }
 
   return (
@@ -62,7 +68,10 @@ const EventDisplay = ({ event }) => {
           <p className="text-md text-gray-700">{thisEvent.location}</p>
         </div>
         <div className="flex space-x-2 mt-4 sm:mt-0">
-          <button className="px-4 py-2 border-2 rounded-lg hover:border-green-600 hover:text-green-600">
+          <button
+            className="px-4 py-2 border-2 rounded-lg hover:border-green-600 hover:text-green-600"
+            onClick={DetailsButtonHandler}
+          >
             Details
           </button>
           <button

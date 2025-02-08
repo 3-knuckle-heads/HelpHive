@@ -54,4 +54,12 @@ export function UpdateEvent(updatedEvent) {
   }
 }
 
+export function GetEventById(id) {
+  for (var e in events) {
+    if (events[e].id === id) {
+      return events[e];
+    }
+  }
+}
+
 //export default events;

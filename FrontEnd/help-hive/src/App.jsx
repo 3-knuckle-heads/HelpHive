@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import ProfilePage from "./pages/profile_page.jsx";
 import AddEventPage from "./pages/AddEventPage.jsx";
 import Faq from "./pages/Faq.jsx";
+import EventDesc from "./pages/EventDesc.jsx";
 
 function App() {
   const [user, setUser] = useState(null); // Track the user state (null means not logged in)
@@ -32,6 +33,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/eventcreate" element={<AddEventPage />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/eventview/:id" element={<EventDesc />} />
           {/* <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} /> */}
 
           <Route
@@ -40,7 +42,7 @@ function App() {
               user ? (
                 <ProfilePage user={user} onLogout={handleLogout} />
               ) : (
-                <Login onSignupSuccess={handleLoginSuccess } />
+                <Login onSignupSuccess={handleLoginSuccess} />
               )
             }
           />
