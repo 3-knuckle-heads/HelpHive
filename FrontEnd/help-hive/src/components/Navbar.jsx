@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import helphiveLogo from "../assets/helphive.png";
 
 const Navbar = ({ user }) => {
-  const [currUser] = useState(user);
-
   return (
     <header className="shadow mb-0.5 px-4">
       <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center md:h-20">
@@ -41,12 +39,23 @@ const Navbar = ({ user }) => {
           className="peer-checked:block md:block hidden"
         >
           <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6">
+            {user && (
+              <li className="">
+                <Link
+                  to="/eventcreate"
+                  className="text-gray-600 hover:text-orange-400 text-lg"
+                >
+                  Create event
+                </Link>
+              </li>
+            )}
+
             <li className="">
               <Link
                 to="/explore"
                 className="text-gray-600 hover:text-orange-400 text-lg"
               >
-                Explore
+                {user ? "Events" : "Explore"}
               </Link>
             </li>
             {/* <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6"> */}

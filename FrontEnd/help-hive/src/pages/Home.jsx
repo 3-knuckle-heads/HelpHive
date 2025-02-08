@@ -1,7 +1,7 @@
 import bgImage from "../assets/BG.png";
 import { useNavigate } from "react-router-dom";
 
-function Home() {
+const Home = ({ user }) => {
   const navigate = useNavigate();
 
   function ExploreClickHandler() {
@@ -49,12 +49,14 @@ function Home() {
               If you want to volunteer, host a campaign, or connect with others,
               HelpHive is your perfect platform.
             </p>
-            <button
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition"
-              onClick={JoinUsClickHandler}
-            >
-              Join us
-            </button>
+            {!user && (
+              <button
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition"
+                onClick={JoinUsClickHandler}
+              >
+                Join us
+              </button>
+            )}
           </div>
         </main>
       </div>
@@ -63,6 +65,6 @@ function Home() {
       </footer>
     </div>
   );
-}
+};
 
 export default Home;

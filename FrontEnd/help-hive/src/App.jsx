@@ -7,6 +7,7 @@ import Explore from "./pages/Explore.jsx";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import ProfilePage from "./pages/profile_page.jsx";
+import AddEventPage from "./pages/AddEventPage.jsx";
 
 function App() {
   const [user, setUser] = useState(null); // Track the user state (null means not logged in)
@@ -24,10 +25,11 @@ function App() {
       <BrowserRouter>
         <Navbar user={user} />
         <Routes>
-          <Route index element={<Home />} />
+          <Route index element={<Home user={user} />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/about" element={<About_US />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/eventcreate" element={<AddEventPage />} />
           {/* <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} /> */}
 
           <Route
