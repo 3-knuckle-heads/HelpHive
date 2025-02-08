@@ -45,4 +45,13 @@ export function SetAllEvents(newEvents) {
   events = newEvents;
 }
 
+export function UpdateEvent(updatedEvent) {
+  for (var e in events) {
+    if (events[e].id === updatedEvent.id) {
+      events[e] = updatedEvent;
+      break;
+    }
+  }
+}
+
 //export default events;

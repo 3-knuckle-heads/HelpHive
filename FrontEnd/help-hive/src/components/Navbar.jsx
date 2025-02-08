@@ -13,9 +13,6 @@ const Navbar = ({ user }) => {
           <span className="size-20 md:pt-1.5">
             <img src={helphiveLogo} className="logo" />
           </span>
-          {/* <span className="text-gray-600 font-medium px-2 text-3xl mb-5 sm:mb-3">
-            Volunteer Network
-          </span> */}
         </Link>
         <input className="peer hidden" type="checkbox" id="nav-open" />
         <label className="absolute right-2 mt-6 md:hidden" htmlFor="nav-open">
