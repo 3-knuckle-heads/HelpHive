@@ -40,7 +40,7 @@ function App() {
               user ? (
                 <ProfilePage user={user} onLogout={handleLogout} />
               ) : (
-                <Login onLoginSuccess={handleLoginSuccess} />
+                <Login onSignupSuccess={handleLoginSuccess } />
               )
             }
           />

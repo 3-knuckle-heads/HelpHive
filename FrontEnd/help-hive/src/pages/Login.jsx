@@ -29,6 +29,7 @@ const Login = ({ onSignupSuccess }) => {
         email: values.email,
         role: values.role,
       };
+    
 
       onSignupSuccess(userData);
       setSubmitting(false);
@@ -106,7 +107,7 @@ const Login = ({ onSignupSuccess }) => {
                     name="profilePic"
                     accept="image/*"
                     onChange={(event) => {
-                      setFieldValue("profilePic", event.currentTarget.files[0]);
+                     Formik. setFieldValue("profilePic", event.currentTarget.files[0]);
                     } }
                     className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500" />
                   <ErrorMessage name="profilePic" component="p" className="text-red-500 text-sm mt-1" />
