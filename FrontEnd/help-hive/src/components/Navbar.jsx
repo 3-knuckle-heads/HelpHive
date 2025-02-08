@@ -75,6 +75,14 @@ const Navbar = ({ user }) => {
                 About
               </Link>
             </li>
+            <li className="">
+              <Link
+                to="/faq"
+                className="text-gray-600 hover:text-orange-400 text-lg"
+              >
+                Faq
+              </Link>
+            </li>
             <li className="mt-2 md:mt-0">
               <Link
                 to="/login"

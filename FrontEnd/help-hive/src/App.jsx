@@ -8,6 +8,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import ProfilePage from "./pages/profile_page.jsx";
 import AddEventPage from "./pages/AddEventPage.jsx";
+import Faq from "./pages/Faq.jsx";
 
 function App() {
   const [user, setUser] = useState(null); // Track the user state (null means not logged in)
@@ -30,6 +31,7 @@ function App() {
           <Route path="/about" element={<About_US />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/eventcreate" element={<AddEventPage />} />
+          <Route path="/faq" element={<Faq />} />
           {/* <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} /> */}
 
           <Route
