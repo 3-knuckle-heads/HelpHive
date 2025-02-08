@@ -1,55 +1,81 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
-const Login = ({ onSignupSuccess }) => {
+const Login = ({ onLoginSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
-    fullName: Yup.string().required("Full name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
+    fullName: Yup.string().when("isSignup", {
+      is: true,
+      then: Yup.string().required("Full name is required"),
+    }),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
+    password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .when("isSignup", {
         is: true,
         then: (schema) => schema.required("Confirm Password is required"),
       }),
-    role: Yup.string().required("Please select a role"),
+    role: Yup.string().when("isSignup", {
+      is: true,
+      then: Yup.string().required("Please select a role"),
+    }),
   });
+
+  const handleImageChange = (e, setFieldValue) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFieldValue("profilePic", reader.result); // Store the base64 image data
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setTimeout(() => {
       const userData = {
-        fullName: values.fullName,
         email: values.email,
-        role: values.role,
+        password: values.password,
+        fullName: isSignup ? values.fullName : undefined,
+        role: isSignup ? values.role : undefined,
+        profilePic: values.profilePic || "", // Save profilePic from form state
       };
-    
 
-      onSignupSuccess(userData);
+      // Simulate API call for login/signup
+      onLoginSuccess(userData); // On success, pass user data to parent component
+
       setSubmitting(false);
       resetForm();
+
+      // Redirect to the profile page after successful login/signup
+      navigate("/profile");
     }, 2000);
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
-          {isSignup ? "Sign Up" : "Login"}
-        </h2>
+        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">{isSignup ? "Sign Up" : "Login"}</h2>
 
         <Formik
-          initialValues={{ fullName: "", email: "", password: "", confirmPassword: "", role: "" }}
+          initialValues={{
+            fullName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            role: "",
+            profilePic: "", // Default empty value for profile picture
+          }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, setFieldValue }) => (
             <Form>
               {isSignup && (
                 <div className="mb-4">
@@ -57,7 +83,7 @@ const Login = ({ onSignupSuccess }) => {
                   <Field
                     type="text"
                     name="fullName"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
                     placeholder="Enter your full name"
                   />
                   <ErrorMessage name="fullName" component="p" className="text-red-500 text-sm mt-1" />
@@ -69,7 +95,7 @@ const Login = ({ onSignupSuccess }) => {
                 <Field
                   type="email"
                   name="email"
-                  className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-md mt-2"
                   placeholder="Enter your email"
                 />
                 <ErrorMessage name="email" component="p" className="text-red-500 text-sm mt-1" />
@@ -80,38 +106,39 @@ const Login = ({ onSignupSuccess }) => {
                 <Field
                   type="password"
                   name="password"
-                  className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-md mt-2"
                   placeholder="Enter your password"
                 />
                 <ErrorMessage name="password" component="p" className="text-red-500 text-sm mt-1" />
               </div>
 
               {isSignup && (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600">Confirm Password</label>
-                  <Field
-                    type="password"
-                    name="confirmPassword"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500"
-                    placeholder="Confirm your password"
-                  />
-                  <ErrorMessage name="confirmPassword" component="p" className="text-red-500 text-sm mt-1" />
-                </div>
-              )}
-              
-              {isSignup && (
-                    <><div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600">Profile Picture</label>
-                  <input
-                    type="file"
-                    name="profilePic"
-                    accept="image/*"
-                    onChange={(event) => {
-                     Formik. setFieldValue("profilePic", event.currentTarget.files[0]);
-                    } }
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500" />
-                  <ErrorMessage name="profilePic" component="p" className="text-red-500 text-sm mt-1" />
-                </div><div className="mb-4">
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-600">Confirm Password</label>
+                    <Field
+                      type="password"
+                      name="confirmPassword"
+                      className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                      placeholder="Confirm your password"
+                    />
+                    <ErrorMessage name="confirmPassword" component="p" className="text-red-500 text-sm mt-1" />
+                  </div>
+
+                  <div className="mb-4 mt-16">
+                    <label htmlFor="profilePic" className="block text-sm font-medium text-gray-600">
+                      Profile Picture
+                    </label>
+                    <input
+                      type="file"
+                      name="profilePic"
+                      accept="image/*"
+                      onChange={(e) => handleImageChange(e, setFieldValue)}
+                      className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    />
+                  </div>
+
+                  <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-600">Role</label>
                     <Field as="select" name="role" className="w-full p-3 border border-gray-300 rounded-md mt-2">
                       <option value="">Select Role</option>
@@ -119,7 +146,8 @@ const Login = ({ onSignupSuccess }) => {
                       <option value="eventHost">Event Host</option>
                     </Field>
                     <ErrorMessage name="role" component="p" className="text-red-500 text-sm mt-1" />
-                  </div></>
+                  </div>
+                </>
               )}
 
               <button

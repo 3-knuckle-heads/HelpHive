@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const ProfilePage = ({ user, onLogout }) => {
   const [editMode, setEditMode] = useState(false);
   const [updatedUser, setUpdatedUser] = useState(user);
+
+  useEffect(() => {
+    setUpdatedUser(user); // Whenever user changes, update the profile data
+  }, [user]);
 
   const handleEdit = () => setEditMode(true);
 
@@ -33,19 +37,17 @@ const ProfilePage = ({ user, onLogout }) => {
         <div className="w-48 h-48 mx-auto">
           <img
             src={updatedUser.profilePic || "../assets/flood.jpg"}
-            alt=""
+            alt="Profile"
             className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
           />
         </div>
         <h2 className="text-4xl font-extrabold text-center text-gray-800 my-6">
           User Profile
         </h2>
+
         {editMode && (
           <div className="mb-4 mt-16">
-            <label
-              htmlFor="profilePic"
-              className="block text-sm font-medium text-gray-600"
-            >
+            <label htmlFor="profilePic" className="block text-sm font-medium text-gray-600">
               Profile Picture
             </label>
             <input
@@ -60,34 +62,28 @@ const ProfilePage = ({ user, onLogout }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
           <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Full Name
-            </label>
+            <label className="block text-sm font-medium text-gray-600">Full Name</label>
             {editMode ? (
               <input
                 type="text"
-                name="name"
+                name="fullName"
                 value={updatedUser.name}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded-md mt-2"
               />
             ) : (
-              <p className="text-lg font-medium">{updatedUser.name}</p>
+              <p className="text-lg font-medium">{updatedUser.fullName}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-gray-600">Email</label>
             <p className="text-lg font-medium">{updatedUser.email}</p>
           </div>
         </div>
 
         <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-600">
-            Date of Birth
-          </label>
+          <label className="block text-sm font-medium text-gray-600">Date of Birth</label>
           <input
             type="date"
             name="dob"
@@ -97,63 +93,38 @@ const ProfilePage = ({ user, onLogout }) => {
             disabled={!editMode}
           />
         </div>
+
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-600">
-            Events Volunteered
-          </label>
-          <p className="text-lg font-medium">
-            {updatedUser.eventsVolunteered || "No events volunteered"}
-          </p>
+          <label className="block text-sm font-medium text-gray-600">Events Volunteered</label>
+          <p className="text-lg font-medium">{updatedUser.eventsVolunteered || "No events volunteered"}</p>
         </div>
 
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-600">
-            Events Hosted
-          </label>
-          <p className="text-lg font-medium">
-            {updatedUser.eventsHosted || "No events hosted"}
-          </p>
+          <label className="block text-sm font-medium text-gray-600">Events Hosted</label>
+          <p className="text-lg font-medium">{updatedUser.eventsHosted || "No events hosted"}</p>
         </div>
 
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-600">
-            Skills
-          </label>
-          <p className="text-lg font-medium">
-            {updatedUser.skills || "No skills listed"}
-          </p>
+          <label className="block text-sm font-medium text-gray-600">Skills</label>
+          <p className="text-lg font-medium">{updatedUser.skills || "No skills listed"}</p>
         </div>
 
         {editMode && (
           <div className="mt-6">
             <button
               onClick={handleSave}
-              className="w-full py-3 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="py-3 px-6 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
             >
               Save Changes
             </button>
           </div>
         )}
 
-        <div className="text-center mt-6">
-          <button
-            onClick={onLogout}
-            className="text-sm text-red-500 hover:underline"
-          >
+        <div className="mt-4 flex justify-end">
+          <button onClick={onLogout} className="py-2 px-4 text-red-600 border-2 border-red-600 rounded-md">
             Logout
           </button>
         </div>
-
-        {!editMode && (
-          <div className="mt-4 text-center">
-            <button
-              onClick={handleEdit}
-              className="text-sm text-blue-500 hover:underline"
-            >
-              Edit Profile
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

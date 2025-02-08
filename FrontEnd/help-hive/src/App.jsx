@@ -6,18 +6,20 @@ import Home from "./pages/Home";
 import Explore from "./pages/Explore.jsx";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
-import ProfilePage from "./pages/profile_page.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 import AddEventPage from "./pages/AddEventPage.jsx";
 import Faq from "./pages/Faq.jsx";
 import EventDesc from "./pages/EventDesc.jsx";
 
 function App() {
-  const [user, setUser] = useState(null); // Track the user state (null means not logged in)
+  const [user, setUser] = useState(null); // Track user state, null means not logged in
 
+  // Handle login or signup success
   const handleLoginSuccess = (userData) => {
     setUser(userData);
   };
 
+  // Handle logout
   const handleLogout = () => {
     setUser(null);
   };
@@ -34,15 +36,25 @@ function App() {
           <Route path="/eventcreate" element={<AddEventPage />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/eventview/:id" element={<EventDesc />} />
-          {/* <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} /> */}
-
+          
+          {/* Login/Signup and Profile */}
           <Route
             path="/login"
             element={
               user ? (
                 <ProfilePage user={user} onLogout={handleLogout} />
               ) : (
-                <Login onSignupSuccess={handleLoginSuccess} />
+                <Login onLoginSuccess={handleLoginSuccess} />
+              )
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              user ? (
+                <ProfilePage user={user} onLogout={handleLogout} />
+              ) : (
+                <Login onLoginSuccess={handleLoginSuccess} />
               )
             }
           />
