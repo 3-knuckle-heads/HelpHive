@@ -12,14 +12,14 @@ import Faq from "./pages/Faq.jsx";
 import EventDesc from "./pages/EventDesc.jsx";
 
 function App() {
-  const [user, setUser] = useState(null); // Track user state, null means not logged in
+  const [user, setUser] = useState(null); 
 
-  // Handle login or signup success
+  
   const handleLoginSuccess = (userData) => {
     setUser(userData);
   };
 
-  // Handle logout
+
   const handleLogout = () => {
     setUser(null);
   };

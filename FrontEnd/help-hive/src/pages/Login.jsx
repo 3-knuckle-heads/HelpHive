@@ -7,30 +7,15 @@ const Login = ({ onLoginSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);
   const navigate = useNavigate();
 
-  const validationSchema = Yup.object({
-    fullName: Yup.string().when("isSignup", {
-      is: true,
-      then: Yup.string().required("Full name is required"),
-    }),
+  const validationSchema = (isSignup) => Yup.object({
+    fullName: isSignup ? Yup.string().required("Full name is required") : Yup.string(),
     email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
-      .when("isSignup", {
-        is: true,
-        then: (schema) => schema.required("Confirm Password is required"),
-      }),
-    role: Yup.string().when("isSignup", {
-      is: true,
-      then: Yup.string().required("Please select a role"),
-    }),
-    dateOfBirth: Yup.date()
-      .required("Date of birth is required")
-      .when("isSignup", {
-        is: true,
-        then: (schema) => schema.required("Please provide your date of birth"),
-      })
-      .nullable(),
+    confirmPassword: isSignup
+      ? Yup.string().oneOf([Yup.ref("password"), null], "Passwords must match").required("Confirm Password is required")
+      : Yup.string(),
+    role: isSignup ? Yup.string().required("Please select a role") : Yup.string(),
+    dateOfBirth: isSignup ? Yup.date().required("Please provide your date of birth") : Yup.date().nullable(),
   });
 
   const handleImageChange = (e, setFieldValue) => {
@@ -52,7 +37,7 @@ const Login = ({ onLoginSuccess }) => {
         fullName: isSignup ? values.fullName : undefined,
         role: isSignup ? values.role : undefined,
         dateOfBirth: isSignup ? values.dateOfBirth : undefined,
-        profilePic: values.profilePic || "", // Save profilePic from form state
+        profilePic: values.profilePic || "", 
       };
 
       // Simulate API call for login/signup
@@ -61,7 +46,6 @@ const Login = ({ onLoginSuccess }) => {
       setSubmitting(false);
       resetForm();
 
-      
       navigate("/profile");
     }, 2000);
   };
@@ -78,12 +62,13 @@ const Login = ({ onLoginSuccess }) => {
             password: "",
             confirmPassword: "",
             role: "",
-            profilePic: "", 
+            profilePic: "",
+            isSignup: isSignup,
           }}
-          validationSchema={validationSchema}
+          validationSchema={validationSchema(isSignup)}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, setFieldValue }) => (
+          {({ isSubmitting, setFieldValue, values }) => (
             <Form>
               {isSignup && (
                 <>
