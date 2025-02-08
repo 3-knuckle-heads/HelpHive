@@ -1,7 +1,17 @@
 import bgImage from "../assets/BG.png";
-import Button from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+
+  function ExploreClickHandler() {
+    navigate("/explore");
+  }
+
+  function JoinUsClickHandler() {
+    navigate("/login");
+  }
+
   return (
     <div
       className="flex flex-col items-left justify-start min-h-screen bg-cover bg-center bg-no-repeat p-6"
@@ -24,7 +34,10 @@ function Home() {
               A platform where volunteers and organizations come together to
               create meaningful change. Join us and make an impact today.
             </p>
-            <button className="bg-orange-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-orange-600 transition">
+            <button
+              className="bg-orange-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-orange-600 transition"
+              onClick={ExploreClickHandler}
+            >
               Explore
             </button>
           </div>
@@ -36,7 +49,10 @@ function Home() {
               If you want to volunteer, host a campaign, or connect with others,
               HelpHive is your perfect platform.
             </p>
-            <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition">
+            <button
+              className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition"
+              onClick={JoinUsClickHandler}
+            >
               Join us
             </button>
           </div>

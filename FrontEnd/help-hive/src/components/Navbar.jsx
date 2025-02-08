@@ -41,7 +41,7 @@ function Navbar() {
           <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6">
             <li className="">
               <Link
-                to="/Explore"
+                to="/explore"
                 className="text-gray-600 hover:text-orange-400 text-lg"
               >
                 Explore
