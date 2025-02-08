@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const ProfilePage = ({ user, onLogout }) => {
   const [editMode, setEditMode] = useState(false);
@@ -8,7 +8,7 @@ const ProfilePage = ({ user, onLogout }) => {
 
   const handleSave = () => {
     setEditMode(false);
-    console.log('Updated User:', updatedUser);
+    console.log("Updated User:", updatedUser);
   };
 
   const handleChange = (e) => {
@@ -28,21 +28,26 @@ const ProfilePage = ({ user, onLogout }) => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 p-6 w-screen h-screen">
+    <div className="flex justify-center items-center min-h-screen bg-white p-6 w-screen h-screen">
       <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-6xl relative h-full flex flex-col justify-center">
-        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-6">User Profile</h2>
-        
-        <div className="absolute top-6 right-6 w-24 h-24">
+        <div className="w-48 h-48 mx-auto">
           <img
-            src={updatedUser.profilePic}
-            alt="Profile"
+            src={updatedUser.profilePic || "../assets/flood.jpg"}
+            alt=""
             className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
           />
         </div>
-
+        <h2 className="text-4xl font-extrabold text-center text-gray-800 my-6">
+          User Profile
+        </h2>
         {editMode && (
           <div className="mb-4 mt-16">
-            <label htmlFor="profilePic" className="block text-sm font-medium text-gray-600">Profile Picture</label>
+            <label
+              htmlFor="profilePic"
+              className="block text-sm font-medium text-gray-600"
+            >
+              Profile Picture
+            </label>
             <input
               type="file"
               name="profilePic"
@@ -55,7 +60,9 @@ const ProfilePage = ({ user, onLogout }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
           <div>
-            <label className="block text-sm font-medium text-gray-600">Full Name</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Full Name
+            </label>
             {editMode ? (
               <input
                 type="text"
@@ -70,21 +77,51 @@ const ProfilePage = ({ user, onLogout }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-600">Email</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Email
+            </label>
             <p className="text-lg font-medium">{updatedUser.email}</p>
           </div>
         </div>
 
         <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-600">Date of Birth</label>
+          <label className="block text-sm font-medium text-gray-600">
+            Date of Birth
+          </label>
           <input
             type="date"
             name="dob"
-            value={updatedUser.dob || ''}
+            value={updatedUser.dob || ""}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-md mt-2"
             disabled={!editMode}
           />
+        </div>
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-600">
+            Events Volunteered
+          </label>
+          <p className="text-lg font-medium">
+            {updatedUser.eventsVolunteered || "No events volunteered"}
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-600">
+            Events Hosted
+          </label>
+          <p className="text-lg font-medium">
+            {updatedUser.eventsHosted || "No events hosted"}
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-600">
+            Skills
+          </label>
+          <p className="text-lg font-medium">
+            {updatedUser.skills || "No skills listed"}
+          </p>
         </div>
 
         {editMode && (
