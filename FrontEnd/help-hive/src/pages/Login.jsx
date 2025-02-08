@@ -24,6 +24,13 @@ const Login = ({ onLoginSuccess }) => {
       is: true,
       then: Yup.string().required("Please select a role"),
     }),
+    dateOfBirth: Yup.date()
+      .required("Date of birth is required")
+      .when("isSignup", {
+        is: true,
+        then: (schema) => schema.required("Please provide your date of birth"),
+      })
+      .nullable(),
   });
 
   const handleImageChange = (e, setFieldValue) => {
@@ -44,16 +51,17 @@ const Login = ({ onLoginSuccess }) => {
         password: values.password,
         fullName: isSignup ? values.fullName : undefined,
         role: isSignup ? values.role : undefined,
+        dateOfBirth: isSignup ? values.dateOfBirth : undefined,
         profilePic: values.profilePic || "", // Save profilePic from form state
       };
 
       // Simulate API call for login/signup
-      onLoginSuccess(userData); // On success, pass user data to parent component
+      onLoginSuccess(userData); 
 
       setSubmitting(false);
       resetForm();
 
-      // Redirect to the profile page after successful login/signup
+      
       navigate("/profile");
     }, 2000);
   };
@@ -70,7 +78,7 @@ const Login = ({ onLoginSuccess }) => {
             password: "",
             confirmPassword: "",
             role: "",
-            profilePic: "", // Default empty value for profile picture
+            profilePic: "", 
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
@@ -78,16 +86,28 @@ const Login = ({ onLoginSuccess }) => {
           {({ isSubmitting, setFieldValue }) => (
             <Form>
               {isSignup && (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600">Full Name</label>
-                  <Field
-                    type="text"
-                    name="fullName"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    placeholder="Enter your full name"
-                  />
-                  <ErrorMessage name="fullName" component="p" className="text-red-500 text-sm mt-1" />
-                </div>
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-600">Full Name</label>
+                    <Field
+                      type="text"
+                      name="fullName"
+                      className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                      placeholder="Enter your full name"
+                    />
+                    <ErrorMessage name="fullName" component="p" className="text-red-500 text-sm mt-1" />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-600">Date of Birth</label>
+                    <Field
+                      type="date"
+                      name="dateOfBirth"
+                      className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    />
+                    <ErrorMessage name="dateOfBirth" component="p" className="text-red-500 text-sm mt-1" />
+                  </div>
+                </>
               )}
 
               <div className="mb-4">

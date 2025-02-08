@@ -81,13 +81,16 @@ const ProfilePage = ({ user, onLogout }) => {
             <p className="text-lg font-medium">{updatedUser.email}</p>
           </div>
         </div>
+         
+          
+        
 
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-600">Date of Birth</label>
           <input
             type="date"
             name="dob"
-            value={updatedUser.dob || ""}
+            value={updatedUser.dateOfBirth || ""}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-md mt-2"
             disabled={!editMode}
