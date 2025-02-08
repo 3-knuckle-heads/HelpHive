@@ -99,15 +99,26 @@ const Login = ({ onSignupSuccess }) => {
               )}
               
               {isSignup && (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600">Role</label>
-                  <Field as="select" name="role" className="w-full p-3 border border-gray-300 rounded-md mt-2">
-                    <option value="">Select Role</option>
-                    <option value="volunteer">Volunteer</option>
-                    <option value="eventHost">Event Host</option>
-                  </Field>
-                  <ErrorMessage name="role" component="p" className="text-red-500 text-sm mt-1" />
-                </div>
+                    <><div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600">Profile Picture</label>
+                  <input
+                    type="file"
+                    name="profilePic"
+                    accept="image/*"
+                    onChange={(event) => {
+                      setFieldValue("profilePic", event.currentTarget.files[0]);
+                    } }
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2 focus:ring-2 focus:ring-blue-500" />
+                  <ErrorMessage name="profilePic" component="p" className="text-red-500 text-sm mt-1" />
+                </div><div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-600">Role</label>
+                    <Field as="select" name="role" className="w-full p-3 border border-gray-300 rounded-md mt-2">
+                      <option value="">Select Role</option>
+                      <option value="volunteer">Volunteer</option>
+                      <option value="eventHost">Event Host</option>
+                    </Field>
+                    <ErrorMessage name="role" component="p" className="text-red-500 text-sm mt-1" />
+                  </div></>
               )}
 
               <button
