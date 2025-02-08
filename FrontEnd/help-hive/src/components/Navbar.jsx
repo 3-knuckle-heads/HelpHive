@@ -1,8 +1,10 @@
-import React from "react";
 import { Outlet, Link } from "react-router-dom";
+import React, { useState } from "react";
 import helphiveLogo from "../assets/helphive.png";
 
-function Navbar() {
+const Navbar = ({ user }) => {
+  const [currUser] = useState(user);
+
   return (
     <header className="shadow mb-0.5 px-4">
       <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center md:h-20">
@@ -69,7 +71,7 @@ function Navbar() {
                 to="/login"
                 className="border-2 px-4 py-2 rounded-2xl border-orange-500 font-semibold text-orange-500 hover:text-blue-500 hover:border-blue-500 text-lg"
               >
-                Log in
+                {user ? "Profile" : "Log in"}
               </Link>
             </li>
           </ul>
@@ -77,6 +79,6 @@ function Navbar() {
       </div>
     </header>
   );
-}
+};
 
 export default Navbar;
