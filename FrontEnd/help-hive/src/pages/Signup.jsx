@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Signup = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
 
-  const validationSchema = (isSignup) =>
+  const validationSchema = () =>
     Yup.object({
       fullName: Yup.string().required("Full name is required"),
       email: Yup.string()
