@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ onLoginSuccess }) => {
@@ -32,7 +33,7 @@ const Login = ({ onLoginSuccess }) => {
         onLoginSuccess(storedUserData[values.email]);
         navigate("/");
       } else {
-        alert("Invalid email or password.");
+        toast.error("Invalid email or password.");
       }
 
       setSubmitting(false);
@@ -104,6 +105,18 @@ const Login = ({ onLoginSuccess }) => {
               >
                 {isSubmitting ? "Processing..." : "Login"}
               </button>
+              <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+              />
             </Form>
           )}
         </Formik>
