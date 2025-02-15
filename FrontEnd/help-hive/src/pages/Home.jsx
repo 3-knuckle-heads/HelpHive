@@ -9,7 +9,7 @@ const Home = ({ user }) => {
   }
 
   function JoinUsClickHandler() {
-    navigate("/login");
+    navigate("/signup");
   }
 
   return (

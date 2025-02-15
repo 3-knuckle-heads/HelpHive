@@ -10,15 +10,14 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import AddEventPage from "./pages/AddEventPage.jsx";
 import Faq from "./pages/Faq.jsx";
 import EventDesc from "./pages/EventDesc.jsx";
+import Signup from "./pages/Signup.jsx";
 
 function App() {
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
 
-  
   const handleLoginSuccess = (userData) => {
     setUser(userData);
   };
-
 
   const handleLogout = () => {
     setUser(null);
@@ -36,8 +35,7 @@ function App() {
           <Route path="/eventcreate" element={<AddEventPage />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/eventview/:id" element={<EventDesc />} />
-          
-          {/* Login/Signup and Profile */}
+
           <Route
             path="/login"
             element={
@@ -45,6 +43,16 @@ function App() {
                 <ProfilePage user={user} onLogout={handleLogout} />
               ) : (
                 <Login onLoginSuccess={handleLoginSuccess} />
+              )
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              user ? (
+                <ProfilePage user={user} onLogout={handleLogout} />
+              ) : (
+                <Signup onLoginSuccess={handleLoginSuccess} />
               )
             }
           />
