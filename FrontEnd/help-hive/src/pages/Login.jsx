@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import bgImage from "../assets/BG.png";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
@@ -42,12 +43,16 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
-          {"Login"}
+    <div
+      className="flex flex-col items-left min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+      }}
+    >
+      <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl m-auto">
+        <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">
+          Login
         </h2>
-
         <Formik
           initialValues={{
             fullName: "",
@@ -98,7 +103,7 @@ const Login = ({ onLoginSuccess }) => {
 
               <button
                 type="submit"
-                className={`w-full py-3 ${
+                className={`w-full py-3 mt-2 ${
                   isSubmitting ? "bg-gray-400" : "bg-blue-600"
                 } text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500`}
                 disabled={isSubmitting}
@@ -106,7 +111,7 @@ const Login = ({ onLoginSuccess }) => {
                 {isSubmitting ? "Processing..." : "Login"}
               </button>
               <ToastContainer
-                position="top-center"
+                position="bottom-right"
                 autoClose={2000}
                 hideProgressBar={false}
                 newestOnTop={false}
@@ -120,7 +125,6 @@ const Login = ({ onLoginSuccess }) => {
             </Form>
           )}
         </Formik>
-
         <div className="text-center mt-4">
           <button
             onClick={() => navigate("/signup")}

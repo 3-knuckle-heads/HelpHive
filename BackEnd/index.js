@@ -1,63 +1,30 @@
 import express from "express";
-const app = express();
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-import cors from "cors";
-import openai from "openai";
-import { default as OpenAI } from "openai/index.mjs";
-import fs from "fs";
+const app = express();
+app.use(express.json());
+dotenv.config();
 
 const port = 4000;
-app.use(cors());
 
-app.get("/api/faq", async (req, res) => {
-  const question = req.query.question;
-  fs.readFile("server/company/feathures.txt", "utf8", async (err, data) => {
-    if (err) {
-      console.error("Error reading the file:", err);
-      return;
-    }
-    if (question && question.length) {
-      const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
-      const ai_model = "gpt-3.5-turbo-1106";
-      // apiKey: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;
-      const secret =
-        sk -
-        proj -
-        IipSA8ecgO25uWgO0s1FfZGPrDzVCytZalMydAD -
-        y5HiqzH0zY4 -
-        ItXcDfSnWUbkYO5EpBDyIUT3BlbkFJar_ -
-        CQ6UsQtK6x4IUvKrwcYFDojiikUF5mRc11E -
-        XdZX4FZuBxiWnVuXMw5wG -
-        b2hgkaIv3UgA;
+app.listen(port, () =>
+  console.log(`server running on http://localhost:${port}/api/v1/`)
+);
 
-      const prompt = [];
-      prompt.push(
-        "you are a company's support specialist available to answer any question.your ques mustbe on company details nothing else"
-      );
-      prompt.push(
-        "politely decline if the question doesnot match the following"
-      );
-      prompt.push(data);
+app.get("/api/v1/", (req, res) => {
+  res.status(200).send("Hello World");
+});
 
-      const message = [
-        {
-          role: "system",
-          content: prompt.join(" "),
-        },
-        {
-          role: "user",
-          content: question,
-        },
-      ];
-      const completion = await openai.chat.completions.create({
-        model: ai_model,
-        messages: message,
-      });
-      const airesponse = completion.choices[0].message.content;
-      res.json({ airesponse });
-    } else {
-      res.json({ message: "no question is provided" });
-    }
+app.post("/api/v1/login", (req, res) => {
+  const username = req.body.username;
+  const user = {
+    name: username,
+  };
+
+  const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+
+  res.status(200).json({
+    accessToken: accessToken,
   });
 });
-app.listen(port, () => console.log(`server running on port ${port}`));
