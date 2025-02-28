@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
 
 const Signup = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
@@ -25,32 +26,29 @@ const Signup = ({ onLoginSuccess }) => {
     });
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    setTimeout(() => {
-      const storedUserData = JSON.parse(localStorage.getItem("userData")) || {};
+    const data = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      password: values.password,
+      role: values.role,
+    };
 
-      if (storedUserData[values.email]) {
-        toast.error("User with this email already exists.");
+    axios
+      .post("http://localhost:4000/api/v1/signup", data)
+      .then(function (res) {
+        onLoginSuccess(data);
+        navigate("/profile");
+        console.log(res.data);
+      })
+      .catch(function (err) {
         setSubmitting(false);
-        return;
-      }
+        toast.error("Register failed! Please try again.");
+        console.log(err);
+      });
 
-      storedUserData[values.email] = {
-        email: values.email,
-        password: values.password,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        role: values.role,
-      };
-
-      localStorage.setItem("userData", JSON.stringify(storedUserData));
-
-      // Simulate API call for signup
-      onLoginSuccess(storedUserData[values.email]);
-      navigate("/profile");
-
-      setSubmitting(false);
-      resetForm();
-    }, 2000);
+    setSubmitting(false);
+    resetForm();
   };
 
   return (
@@ -178,7 +176,7 @@ const Signup = ({ onLoginSuccess }) => {
                   className="w-full p-3 border border-gray-300 rounded-md mt-2"
                 >
                   <option value="volunteer">Volunteer</option>
-                  <option value="eventHost">Event Host</option>
+                  <option value="host">Event Host</option>
                 </Field>
                 <ErrorMessage
                   name="role"

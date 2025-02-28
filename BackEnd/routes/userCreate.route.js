@@ -5,5 +5,4 @@ const route = express.Router();
 
 route.post("/", createUser);
 
-// module.exports = userCreateRoute;
 export default route;

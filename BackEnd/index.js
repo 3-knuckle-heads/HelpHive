@@ -2,10 +2,12 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import cors from "cors";
 import userCreateRoute from "./routes/userCreate.route.js";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 dotenv.config();
 
 const port = process.env.PORT;
@@ -40,7 +42,6 @@ const url = process.env.DB_URL;
 
 async function run() {
   try {
-    // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
     await mongoose.connect(url, clientOptions);
     //  await mongoose.connection.db.admin().command({ ping: 1 });
     console.log(

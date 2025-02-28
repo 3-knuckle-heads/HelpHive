@@ -13,10 +13,9 @@ async function createUser_DB(userData) {
     role: "volunteer",
   });
 
-  console.log("nUser", nUser);
+  // console.log("nUser", nUser);
 
   return await nUser.save();
 }
 
-// module.exports = { createUser_DB };
 export default createUser_DB;
