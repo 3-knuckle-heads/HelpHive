@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import EventDisplay from "../components/EventDisplay";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { GetAllEvents, SetAllEvents } from "../components/events";
 
 const AddEventPage = () => {
   const [events, setEvents] = useState(GetAllEvents());
-
   const [newEvent, setNewEvent] = useState({
     title: "",
     needed: "",
@@ -12,6 +11,8 @@ const AddEventPage = () => {
     organizer: "HelpHive",
     location: "",
     image: "",
+    latitude: null,
+    longitude: null,
   });
 
   const handleChange = (e) => {
@@ -34,18 +35,29 @@ const AddEventPage = () => {
     ];
 
     setEvents(newEv);
-
     SetAllEvents(newEv);
 
     setNewEvent({
       title: "",
       needed: "",
-      responded: "",
-      organizer: "",
+      responded: "0",
+      organizer: "HelpHive",
       location: "",
       image: "",
+      latitude: null,
+      longitude: null,
     });
-    // console.log(GetAllEvents());
+  };
+
+  const handleMapClick = (e) => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    setNewEvent({
+      ...newEvent,
+      latitude: lat,
+      longitude: lng,
+      location: `Lat: ${lat}, Lng: ${lng}`, // Optional: Set a string or use reverse geocoding to get a location name.
+    });
   };
 
   return (
@@ -91,6 +103,7 @@ const AddEventPage = () => {
               value={newEvent.location}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
+              readOnly
             />
           </div>
 
@@ -109,6 +122,29 @@ const AddEventPage = () => {
             />
           </div>
 
+          {/* Google Map */}
+          <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
+            <GoogleMap
+              id="event-location-map"
+              mapContainerStyle={{
+                height: "400px",
+                width: "100%",
+              }}
+              center={{ lat: 0, lng: 0 }}
+              zoom={2}
+              onClick={handleMapClick}
+            >
+              {newEvent.latitude && newEvent.longitude && (
+                <Marker
+                  position={{
+                    lat: newEvent.latitude,
+                    lng: newEvent.longitude,
+                  }}
+                />
+              )}
+            </GoogleMap>
+          </LoadScript>
+
           <button
             type="button"
             onClick={handleAddEvent}
@@ -117,17 +153,6 @@ const AddEventPage = () => {
             Add Event
           </button>
         </form>
-      </div>
-
-      <div className="container mx-auto max-w-4xl mt-12">
-        <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
-          Event List
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {events.map((e) => (
-            <EventDisplay event={e}></EventDisplay>
-          ))}
-        </div>
       </div>
     </div>
   );

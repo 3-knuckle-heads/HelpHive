@@ -1,8 +1,21 @@
-import { Outlet, Link } from "react-router-dom";
-import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import helphiveLogo from "../assets/helphive.png";
 
 const Navbar = ({ user }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Manage dropdown state
+  const location = useLocation(); // Get current route location
+
+  // Close dropdown when the route changes
+  useEffect(() => {
+    setIsDropdownOpen(false); // Close dropdown on route change
+  }, [location]);
+
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
   return (
     <header className="shadow mb-0.5 px-4">
       <div className="relative max-w-screen-lg mx-auto py-4 flex flex-col md:flex-row md:justify-between md:items-center md:h-20">
@@ -36,27 +49,62 @@ const Navbar = ({ user }) => {
           className="peer-checked:block md:block hidden"
         >
           <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6">
-            {user && (
-              <li className="">
-                <Link
-                  to="/eventcreate"
-                  className="text-gray-600 hover:text-orange-400 text-lg"
-                >
-                  Create event
-                </Link>
-              </li>
-            )}
-
-            <li className="">
-              <Link
-                to="/explore"
-                className="text-gray-600 hover:text-orange-400 text-lg"
+            
+            {/* Explore dropdown menu */}
+            <li className="relative">
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center space-x-2 text-gray-600 hover:text-orange-400 text-lg"
               >
-                {user ? "Events" : "Explore"}
-              </Link>
+                <span>{user ? "Events" : "Explore"}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className={`w-5 h-5 transform transition-transform duration-200 ${
+                    isDropdownOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              {isDropdownOpen && (
+                <ul className="absolute left-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  <li>
+                    <Link
+                      to="/myevents"
+                      className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
+                    >
+                      My Events
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/eventcreate"
+                      className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
+                    >
+                      Add Event
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/explore"
+                      className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
+                    >
+                      Events
+                    </Link>
+                  </li>
+                </ul>
+              )}
             </li>
-            {/* <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6"> */}
-            <li className="">
+
+            <li>
               <Link
                 to="/contact"
                 className="text-gray-600 hover:text-orange-400 text-lg"
@@ -64,7 +112,7 @@ const Navbar = ({ user }) => {
                 Contact
               </Link>
             </li>
-            <li className="">
+            <li>
               <Link
                 to="/about"
                 className="text-gray-600 hover:text-orange-400 text-lg"
@@ -72,7 +120,7 @@ const Navbar = ({ user }) => {
                 About
               </Link>
             </li>
-            <li className="">
+            <li>
               <Link
                 to="/faq"
                 className="text-gray-600 hover:text-orange-400 text-lg"

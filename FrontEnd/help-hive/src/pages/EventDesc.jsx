@@ -1,14 +1,13 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GetEventById, UpdateEvent } from "../components/events";
 import { useParams } from "react-router-dom";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 function EventDesc() {
   const { id } = useParams();
-
   const [event, setEvent] = useState(GetEventById(parseInt(id)));
 
-  function handleRespond() {
+  const handleRespond = () => {
     setEvent((prevEvent) => {
       const updatedEvent = {
         ...prevEvent,
@@ -18,15 +17,15 @@ function EventDesc() {
       UpdateEvent(updatedEvent);
       return updatedEvent;
     });
-  }
+  };
 
   return (
     <div className="min-h-screen">
       <img
         className="w-200 h-70 object-cover bg-center relative mx-auto rounded-2xl mt-2"
         src={event.image}
-      ></img>
-      <br />
+        alt="Event"
+      />
       <h2 className="text-2xl md:text-4xl font-bold text-black text-center">
         {event.title}
       </h2>
@@ -55,18 +54,38 @@ function EventDesc() {
             }}
           ></div>
         </div>
+
+        {/* Display Google Map */}
+        {event.latitude && event.longitude && (
+          <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
+            <GoogleMap
+              id="event-location-map"
+              mapContainerStyle={{
+                height: "400px",
+                width: "100%",
+              }}
+              center={{
+                lat: event.latitude,
+                lng: event.longitude,
+              }}
+              zoom={15}
+            >
+              <Marker
+                position={{
+                  lat: event.latitude,
+                  lng: event.longitude,
+                }}
+              />
+            </GoogleMap>
+          </LoadScript>
+        )}
+
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            About This Event
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-800">About This Event</h2>
           <p className="text-gray-700 mt-2">
             {event.description ||
-              "loreLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
           </p>
-          <h2 className="text-2xl font-semibold text-gray-800 mt-2">
-            Skills needed
-          </h2>
-          <p className="text-gray-700 mt-2">Strong communication, Leadership</p>
         </div>
         <div className="flex space-x-4 mt-6">
           <button

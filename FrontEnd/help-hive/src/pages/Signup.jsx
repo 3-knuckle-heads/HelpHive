@@ -16,6 +16,9 @@ const Signup = ({ onLoginSuccess }) => {
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
+      phonenumber: Yup.string()
+        .matches(/^[0-9]{11}$/, "Phone number must be exactly 10 digits")
+        .required("Phone number is required"),
       password: Yup.string()
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
@@ -30,6 +33,7 @@ const Signup = ({ onLoginSuccess }) => {
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.email,
+      phonenumber: values.phonenumber,
       password: values.password,
       role: values.role,
     };
@@ -37,9 +41,8 @@ const Signup = ({ onLoginSuccess }) => {
     axios
       .post("http://localhost:4000/api/v1/signup", data)
       .then(function (res) {
-        onLoginSuccess(data);
-        navigate("/profile");
-        console.log(res.data);
+        onLoginSuccess(data);  // Pass the user data to onLoginSuccess
+        navigate("/profile");  // Redirect to the profile page
       })
       .catch(function (err) {
         setSubmitting(false);
@@ -53,21 +56,20 @@ const Signup = ({ onLoginSuccess }) => {
 
   return (
     <div
-      className="flex flex-col items-left min-h-screen bg-cover bg-center bg-no-repeat"
+      className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: `url(${bgImage})`,
       }}
     >
       <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-4xl m-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">
-          Sign Up
-        </h2>
+        <h2 className="text-3xl font-bold text-center text-gray-700 mb-6">Sign Up</h2>
 
         <Formik
           initialValues={{
             firstName: "",
             lastName: "",
             email: "",
+            phonenumber: "",
             password: "",
             confirmPassword: "",
             role: "volunteer",
@@ -79,9 +81,7 @@ const Signup = ({ onLoginSuccess }) => {
             <Form>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-600">
-                    First Name
-                  </label>
+                  <label className="block text-sm font-medium text-gray-600">First Name</label>
                   <Field
                     type="text"
                     name="firstName"
@@ -94,11 +94,8 @@ const Signup = ({ onLoginSuccess }) => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-600">
-                    Last Name
-                  </label>
+                  <label className="block text-sm font-medium text-gray-600">Last Name</label>
                   <Field
                     type="text"
                     name="lastName"
@@ -113,63 +110,72 @@ const Signup = ({ onLoginSuccess }) => {
                 </div>
               </div>
 
+              {/* Email and Phone Number fields side by side */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">Email</label>
+                  <Field
+                    type="email"
+                    name="email"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    placeholder="Enter your email"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="p"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">Phone Number</label>
+                  <Field
+                    type="text"
+                    name="phonenumber"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    placeholder="Enter your phone number"
+                  />
+                  <ErrorMessage
+                    name="phonenumber"
+                    component="p"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+              </div>
+
+              {/* Password and Confirm Password fields */}
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-600">
-                  Email
-                </label>
+                <label className="block text-sm font-medium text-gray-600">Password</label>
                 <Field
-                  type="email"
-                  name="email"
+                  type="password"
+                  name="password"
                   className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                  placeholder="Enter your email"
+                  placeholder="Enter your password"
                 />
                 <ErrorMessage
-                  name="email"
+                  name="password"
                   component="p"
                   className="text-red-500 text-sm mt-1"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">
-                    Password
-                  </label>
-                  <Field
-                    type="password"
-                    name="password"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    placeholder="Enter your password"
-                  />
-                  <ErrorMessage
-                    name="password"
-                    component="p"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">
-                    Confirm Password
-                  </label>
-                  <Field
-                    type="password"
-                    name="confirmPassword"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    placeholder="Confirm your password"
-                  />
-                  <ErrorMessage
-                    name="confirmPassword"
-                    component="p"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-600">Confirm Password</label>
+                <Field
+                  type="password"
+                  name="confirmPassword"
+                  className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                  placeholder="Confirm your password"
+                />
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="p"
+                  className="text-red-500 text-sm mt-1"
+                />
               </div>
 
+              {/* Role dropdown */}
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-600">
-                  Role
-                </label>
+                <label className="block text-sm font-medium text-gray-600">Role</label>
                 <Field
                   as="select"
                   name="role"
@@ -187,13 +193,12 @@ const Signup = ({ onLoginSuccess }) => {
 
               <button
                 type="submit"
-                className={`w-full py-3 mt-6 rounded-md text-white text-lg font-medium transition ${
-                  isSubmitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-                }`}
+                className={`w-full py-3 mt-6 rounded-md text-white text-lg font-medium transition ${isSubmitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Processing..." : "Sign Up"}
               </button>
+
               <ToastContainer
                 position="bottom-right"
                 autoClose={2000}
@@ -211,10 +216,7 @@ const Signup = ({ onLoginSuccess }) => {
         </Formik>
 
         <div className="text-center mt-4">
-          <button
-            onClick={() => navigate("/login")}
-            className="text-sm text-blue-500 hover:underline"
-          >
+          <button onClick={() => navigate("/login")} className="text-sm text-blue-500 hover:underline">
             Already have an account? Login
           </button>
         </div>
