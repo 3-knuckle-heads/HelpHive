@@ -1,8 +1,9 @@
-import createUser_DB from "../services/signup";
+import createUser_DB from "../services/userCreateService.js";
 
 async function createUser(req, res) {
   try {
     const data = req.body;
+    console.log("req.body", req.body);
     const user = await createUser_DB(data);
 
     res.status(201).json({
@@ -17,4 +18,5 @@ async function createUser(req, res) {
   }
 }
 
-module.exports = { createUser };
+// module.exports = { createUser };
+export default createUser;
