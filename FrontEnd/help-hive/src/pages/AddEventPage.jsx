@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
@@ -26,7 +26,9 @@ const AddEventPage = ({ currentUser }) => {
     location: "",
     image: "",
     date: "",
+    file: null, // Initialize file as null
   });
+  const [imageUploaded, setImageUploaded] = useState(false); // Track image upload status
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,56 +38,105 @@ const AddEventPage = ({ currentUser }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewEvent((prevState) => ({ ...prevState, image: reader.result }));
-      };
-      reader.readAsDataURL(file);
+  const handleImageChange = async (file) => {
+    if (!file) return null;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "main_preset"); // Replace with your preset
+
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dzi8td0tj/image/upload",
+        formData
+      );
+
+      if (response.data.secure_url) {
+        return response.data.secure_url; // Return image URL after upload
+      } else {
+        console.error("Upload failed:", response.data);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return null;
     }
   };
 
-  const handleAddEvent = () => {
-    setNewEvent((prevState) => ({
-      ...prevState,
-      image: "",
-    }));
-    const data = newEvent;
+  const handleAddEvent = async (e) => {
+    e.preventDefault(); // Prevent form submission
 
-    console.log("data", data);
+    if (!newEvent.image && newEvent.file) {
+      toast.info("Uploading image, please wait...");
 
-    const config = {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    };
+      // Wait for image upload
+      const uploadedImageUrl = await handleImageChange(newEvent.file);
+      console.log("uploadedImageUrl", uploadedImageUrl);
 
-    axios
-      .post("http://localhost:4000/api/v1/create_event", data, config)
-      .then(function (res) {
-        toast.info("Event added successfully!");
-        console.log(res.data);
+      if (!uploadedImageUrl) {
+        toast.error("Image upload failed!");
+        return;
+      }
 
-        setNewEvent({
-          title: "",
-          needed: "",
-          responded: "0",
-          organizer: currentUser || "HelpHive",
-          location: "",
-          image: "",
-          date: "",
+      // Update event with uploaded image URL
+      setNewEvent((prevState) => ({
+        ...prevState,
+        image: uploadedImageUrl,
+        file: null, // Remove file after uploading
+      }));
+    }
+  };
+
+  // useEffect will trigger once the image is uploaded and the state is updated
+  useEffect(() => {
+    if (newEvent.image && newEvent.file === null) {
+      // Now send the event data after the image URL has been updated
+      const updatedEvent = { ...newEvent, file: undefined }; // Remove file before sending
+      console.log("Final Event Data:", updatedEvent);
+
+      const config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      };
+
+      axios
+        .post("http://localhost:4000/api/v1/create_event", updatedEvent, config)
+        .then((res) => {
+          toast.success("Event added successfully!");
+          console.log(res.data);
+
+          // Clear the form
+          setNewEvent({
+            title: "",
+            needed: "",
+            responded: "0",
+            organizer: currentUser || "HelpHive",
+            location: "",
+            image: "",
+            date: "",
+            file: null, // Clear file input
+          });
+
+          // Navigate after 2 seconds
+          setTimeout(() => {
+            navigate("/myevents");
+          }, 2000);
+        })
+        .catch((err) => {
+          toast.error("Event creation failed! Please try again.");
+          console.log(err);
         });
+    }
+  }, [newEvent, navigate]);
 
-        setTimeout(() => {
-          navigate("/myevents");
-        }, 2000);
-      })
-      .catch(function (err) {
-        toast.error("Event creation failed! Please try again.");
-        console.log(err);
-      });
+  // Handle file selection & upload
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setNewEvent((prevState) => ({ ...prevState, file })); // Store file
+    }
   };
 
   return (
@@ -160,7 +211,7 @@ const AddEventPage = ({ currentUser }) => {
               type="file"
               name="image"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={handleFileSelect}
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
             />
           </div>
