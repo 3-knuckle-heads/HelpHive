@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Select from "react-select/base";
 
 const ProfilePage = ({ user, onLogout }) => {
   const [updatedUser, setUpdatedUser] = useState(user);
@@ -8,8 +9,8 @@ const ProfilePage = ({ user, onLogout }) => {
   const [isEditingContact, setIsEditingContact] = useState(false);
   const [newContact, setNewContact] = useState("");
 
-  // const [isEditingSkills, setIsEditingSkills] = useState(false);
-  // const [selectedSkills, setSelectedSkills] = useState(user.skills || []);
+  const [isEditingSkills, setIsEditingSkills] = useState(false);
+  const [selectedSkills, setSelectedSkills] = useState(user.skills || []);
 
   const skillOptions = [
     { value: "Event Planning", label: "Event Planning" },
@@ -54,15 +55,18 @@ const ProfilePage = ({ user, onLogout }) => {
     setNewContact(""); // Reset input field
   };
 
-  const toggleSkill = (skill) => {
-    setSelectedSkills((prevSkills) =>
-      prevSkills.includes(skill) ? prevSkills.filter((s) => s !== skill) : [...prevSkills, skill]
-    );
+  const handleSkillsChange = (selectedOptions) => {
+    setSelectedSkills(selectedOptions);
   };
 
   const saveSkills = () => {
-    setUpdatedUser((prev) => ({ ...prev, skills: selectedSkills }));
+    setUpdatedUser((prev) => ({ ...prev, skills: selectedSkills.map(skill => skill.label) }));
     setIsEditingSkills(false);
+  };
+
+  const cancelSkillsEdit = () => {
+    setIsEditingSkills(false);
+    setSelectedSkills(user.skills || []);
   };
 
   return (
@@ -232,6 +236,16 @@ const ProfilePage = ({ user, onLogout }) => {
             </p>
           </div>
 
+            {/* <div>
+              <h5>Skills
+              </h5>
+              <Select>
+                skillOptions={skillOptions}
+                value={selectedSkills}
+                onChange={handleSkillsChange}
+                isMulti={true}
+              </Select>
+            </div> */}
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-600">
               Skills

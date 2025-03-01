@@ -10,6 +10,7 @@ const AddEventPage = ({ currentUser }) => {
     organizer: currentUser || "HelpHive",
     location: "",
     image: "",
+    date:"",
     latitude: null,
     longitude: null,
   });
@@ -51,6 +52,7 @@ const AddEventPage = ({ currentUser }) => {
       organizer: currentUser || "HelpHive",
       location: "",
       image: "",
+      date:"",
       latitude: null,
       longitude: null,
     });
@@ -76,17 +78,31 @@ const AddEventPage = ({ currentUser }) => {
             />
           </div>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
-              Needed Volunteers
-            </label>
-            <input
-              type="number"
-              name="needed"
-              value={newEvent.needed}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md mt-2"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-600">
+                Needed Volunteers
+              </label>
+              <input
+                type="number"
+                name="needed"
+                value={newEvent.needed}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md mt-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-600">
+                Event Date
+              </label>
+              <input
+                type="date"
+                name="date"
+                value={newEvent.date}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md mt-2"
+              />
+            </div>
           </div>
 
           <div className="mb-4">

@@ -12,6 +12,7 @@ import Faq from "./pages/Faq.jsx";
 import EventDesc from "./pages/EventDesc.jsx";
 import Signup from "./pages/Signup.jsx";
 import MyEvents from "./pages/MyEvents";
+import Certificate from "./components/Certificate.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -44,6 +45,8 @@ function App() {
           <Route path="/faq" element={<Faq />} />
           <Route path="/eventview/:id" element={<EventDesc />} />
           <Route path="/myevents" element={<MyEvents />} />
+          <Route path="/certificate" element={<Certificate />} />
+  
 
           <Route
             path="/login"

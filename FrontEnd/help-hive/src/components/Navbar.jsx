@@ -100,6 +100,11 @@ const Navbar = ({ user }) => {
                       Events
                     </Link>
                   </li>
+                  <li>
+                    <Link to="/certificate" className="block px-4 py-2 text-gray-600 hover:bg-orange-100">
+                      Certification
+                    </Link>
+                  </li>
                 </ul>
               )}
             </li>
