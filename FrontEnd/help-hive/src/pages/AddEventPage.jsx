@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { GetAllEvents, SetAllEvents } from "../components/events";
+import { useNavigate } from "react-router-dom";
 
-const AddEventPage = () => {
-  const [events, setEvents] = useState(GetAllEvents());
+const AddEventPage = ({ currentUser }) => {
+  const navigate = useNavigate();
   const [newEvent, setNewEvent] = useState({
     title: "",
     needed: "",
     responded: "0",
-    organizer: "HelpHive",
+    organizer: currentUser || "HelpHive",
     location: "",
     image: "",
     latitude: null,
@@ -23,40 +22,37 @@ const AddEventPage = () => {
     }));
   };
 
-  const handleAddEvent = () => {
-    const newId = events.length + 1;
-    const newEv = [
-      ...events,
-      {
-        ...newEvent,
-        id: newId,
-        image: URL.createObjectURL(newEvent.image),
-      },
-    ];
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewEvent((prevState) => ({ ...prevState, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-    setEvents(newEv);
-    SetAllEvents(newEv);
+  const handleAddEvent = () => {
+    const existingEvents = JSON.parse(localStorage.getItem("myEvents")) || [];
+    const newId = existingEvents.length + 1;
+
+    const updatedEvents = [...existingEvents, { ...newEvent, id: newId }];
+
+    localStorage.setItem("myEvents", JSON.stringify(updatedEvents));
+
+    alert("Event added successfully!");
+    navigate("/myevents"); // Redirect to My Events page
 
     setNewEvent({
       title: "",
       needed: "",
       responded: "0",
-      organizer: "HelpHive",
+      organizer: currentUser || "HelpHive",
       location: "",
       image: "",
       latitude: null,
       longitude: null,
-    });
-  };
-
-  const handleMapClick = (e) => {
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
-    setNewEvent({
-      ...newEvent,
-      latitude: lat,
-      longitude: lng,
-      location: `Lat: ${lat}, Lng: ${lng}`, // Optional: Set a string or use reverse geocoding to get a location name.
     });
   };
 
@@ -95,6 +91,19 @@ const AddEventPage = () => {
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-600">
+              Description
+            </label>
+            <input
+              type="text"
+              name="description"
+              value={newEvent.description}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-md mt-2"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600">
               Location
             </label>
             <input
@@ -103,7 +112,6 @@ const AddEventPage = () => {
               value={newEvent.location}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
-              readOnly
             />
           </div>
 
@@ -115,33 +123,10 @@ const AddEventPage = () => {
               type="file"
               name="image"
               accept="image/*"
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, image: e.target.files[0] })
-              }
+              onChange={handleImageChange}
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
             />
           </div>
-          <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
-            <GoogleMap
-              id="event-location-map"
-              mapContainerStyle={{
-                height: "400px",
-                width: "100%",
-              }}
-              center={{ lat: 0, lng: 0 }}
-              zoom={2}
-              onClick={handleMapClick}
-            >
-              {newEvent.latitude && newEvent.longitude && (
-                <Marker
-                  position={{
-                    lat: newEvent.latitude,
-                    lng: newEvent.longitude,
-                  }}
-                />
-              )}
-            </GoogleMap>
-          </LoadScript>
 
           <button
             type="button"

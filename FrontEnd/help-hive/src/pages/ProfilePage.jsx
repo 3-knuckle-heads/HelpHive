@@ -5,6 +5,19 @@ const ProfilePage = ({ user, onLogout }) => {
   const [isEditingProfilePic, setIsEditingProfilePic] = useState(false);
   const [newProfilePic, setNewProfilePic] = useState(null);
 
+  const [isEditingContact, setIsEditingContact] = useState(false);
+  const [newContact, setNewContact] = useState("");
+
+  // const [isEditingSkills, setIsEditingSkills] = useState(false);
+  // const [selectedSkills, setSelectedSkills] = useState(user.skills || []);
+
+  const skillOptions = [
+    { value: "Event Planning", label: "Event Planning" },
+    { value: "First Aid", label: "First Aid" },
+    { value: "Cooking", label: "Cooking" },
+    { value: "Teaching", label: "Teaching" },
+    { value: "Fundraising", label: "Fundraising" },
+  ];
   useEffect(() => {
     setUpdatedUser(user);
   }, [user]);
@@ -27,12 +40,28 @@ const ProfilePage = ({ user, onLogout }) => {
     setNewProfilePic(null);
   };
 
+  const saveContactNumber = () => {
+    setUpdatedUser((prev) => ({ ...prev, contactNumber: newContact }));
+    setIsEditingContact(false);
+  };
+
+  const toggleSkill = (skill) => {
+    setSelectedSkills((prevSkills) =>
+      prevSkills.includes(skill) ? prevSkills.filter((s) => s !== skill) : [...prevSkills, skill]
+    );
+  };
+
+  const saveSkills = () => {
+    setUpdatedUser((prev) => ({ ...prev, skills: selectedSkills }));
+    setIsEditingSkills(false);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      {/* Profile Page Content */}
+      
       <div className="flex justify-center items-center bg-gray-50 p-6 flex-1 w-full">
         <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-6xl relative flex flex-col justify-center">
-          {/* Profile Picture */}
+          
           <div className="relative w-48 h-48 mx-auto">
             <img
               src={
@@ -92,12 +121,12 @@ const ProfilePage = ({ user, onLogout }) => {
             )}
           </div>
 
-          {/* Full Name */}
+          
           <h2 className="text-4xl font-extrabold text-center text-gray-800 my-6">
             {updatedUser.firstName + " " + updatedUser.lastName}
           </h2>
 
-          {/* User Info */}
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
             <div>
               <label className="block text-sm font-medium text-gray-600">
@@ -127,8 +156,9 @@ const ProfilePage = ({ user, onLogout }) => {
               {updatedUser.contactNumber || "No contact number provided"}
             </p>
           </div>
-
-          {/* Volunteered & Hosted Events */}
+              
+            
+          
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-600">
               Events Volunteered

@@ -3,15 +3,15 @@ import React, { useState, useEffect } from "react";
 import helphiveLogo from "../assets/helphive.png";
 
 const Navbar = ({ user }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Manage dropdown state
-  const location = useLocation(); // Get current route location
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const location = useLocation(); 
+  
 
-  // Close dropdown when the route changes
   useEffect(() => {
-    setIsDropdownOpen(false); // Close dropdown on route change
+    setIsDropdownOpen(false); 
   }, [location]);
 
-  // Toggle dropdown visibility
+  
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
@@ -50,13 +50,13 @@ const Navbar = ({ user }) => {
         >
           <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6">
             
-            {/* Explore dropdown menu */}
+          
             <li className="relative">
               <button
                 onClick={toggleDropdown}
                 className="flex items-center space-x-2 text-gray-600 hover:text-orange-400 text-lg"
               >
-                <span>{user ? "Events" : "Explore"}</span>
+                <span>{user ? "Explore" : "Explore"}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
