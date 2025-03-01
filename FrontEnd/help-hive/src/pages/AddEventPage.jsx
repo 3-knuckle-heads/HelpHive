@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+
+const bangladeshCities = [
+  "Dhaka",
+  "Chattogram",
+  "Khulna",
+  "Rajshahi",
+  "Sylhet",
+  "Barishal",
+  "Rangpur",
+  "Mymensingh",
+  "Cumilla",
+  "Narayanganj",
+];
 
 const AddEventPage = ({ currentUser }) => {
   const navigate = useNavigate();
@@ -12,8 +26,6 @@ const AddEventPage = ({ currentUser }) => {
     location: "",
     image: "",
     date: "",
-    latitude: null,
-    longitude: null,
   });
 
   const handleChange = (e) => {
@@ -36,45 +48,49 @@ const AddEventPage = ({ currentUser }) => {
   };
 
   const handleAddEvent = () => {
-    const existingEvents = JSON.parse(localStorage.getItem("myEvents")) || [];
-    const newId = existingEvents.length + 1;
-
-    const updatedEvents = [...existingEvents, { ...newEvent, id: newId }];
-
-    localStorage.setItem("myEvents", JSON.stringify(updatedEvents));
-
-    toast.info("Event added successfully!");
-    setTimeout(() => {
-      navigate("/myevents");
-    }, 2000);
-
-    setNewEvent({
-      title: "",
-      needed: "",
-      responded: "0",
-      organizer: currentUser || "HelpHive",
-      location: "",
+    setNewEvent((prevState) => ({
+      ...prevState,
       image: "",
-      date: "",
-      latitude: null,
-      longitude: null,
-    });
+    }));
+    const data = newEvent;
+
+    console.log("data", data);
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    };
+
+    axios
+      .post("http://localhost:4000/api/v1/create_event", data, config)
+      .then(function (res) {
+        toast.info("Event added successfully!");
+        console.log(res.data);
+
+        setNewEvent({
+          title: "",
+          needed: "",
+          responded: "0",
+          organizer: currentUser || "HelpHive",
+          location: "",
+          image: "",
+          date: "",
+        });
+
+        setTimeout(() => {
+          navigate("/myevents");
+        }, 2000);
+      })
+      .catch(function (err) {
+        toast.error("Event creation failed! Please try again.");
+        console.log(err);
+      });
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <ToastContainer
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      <ToastContainer position="bottom-right" autoClose={2000} />
       <div className="container mx-auto max-w-4xl bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
           Add New Event
@@ -92,7 +108,6 @@ const AddEventPage = ({ currentUser }) => {
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
             />
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-600">
@@ -119,33 +134,24 @@ const AddEventPage = ({ currentUser }) => {
               />
             </div>
           </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
-              Description
-            </label>
-            <input
-              type="text"
-              name="description"
-              value={newEvent.description}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md mt-2"
-            />
-          </div>
-
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-600">
               Location
             </label>
-            <input
-              type="text"
+            <select
               name="location"
               value={newEvent.location}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
-            />
+            >
+              <option value="">Select a city</option>
+              {bangladeshCities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
           </div>
-
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-600">
               Event Image
@@ -158,11 +164,10 @@ const AddEventPage = ({ currentUser }) => {
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
             />
           </div>
-
           <button
             type="button"
             onClick={handleAddEvent}
-            className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
+            className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 mt-4"
           >
             Add Event
           </button>

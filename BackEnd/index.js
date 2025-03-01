@@ -5,6 +5,7 @@ import cors from "cors";
 import userCreateRoute from "./routes/userCreate.route.js";
 import userLoginRoute from "./routes/userLogin.route.js";
 import userGetRoute from "./routes/userGet.route.js";
+import eventCreateRoute from "./routes/eventCreate.route.js";
 
 const app = express();
 app.use(express.json());
@@ -18,12 +19,14 @@ app.listen(port, () =>
 );
 
 app.get("/api/v1/", (req, res) => {
-  res.status(200).send("Hello World");
+  res.status(200).send("Hello World.");
 });
 
 app.use("/api/v1/signup", userCreateRoute);
 app.use("/api/v1/login", userLoginRoute);
-app.use("/api/v1/getusers", userGetRoute);
+app.use("/api/v1/get_users", userGetRoute);
+
+app.use("/api/v1/create_event", eventCreateRoute);
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
