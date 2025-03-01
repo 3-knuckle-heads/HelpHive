@@ -1,9 +1,9 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import userCreateRoute from "./routes/userCreate.route.js";
+import userLoginRoute from "./routes/userLogin.route.js";
 
 const app = express();
 app.use(express.json());
@@ -22,18 +22,7 @@ app.get("/api/v1/", (req, res) => {
 
 app.use("/api/v1/signup", userCreateRoute);
 
-app.post("/api/v1/login", (req, res) => {
-  const username = req.body.username;
-  const user = {
-    name: username,
-  };
-
-  const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-
-  res.status(200).json({
-    accessToken: accessToken,
-  });
-});
+app.use("/api/v1/login", userLoginRoute);
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
