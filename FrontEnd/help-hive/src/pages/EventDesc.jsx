@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 //import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
 function EventDesc() {
@@ -48,11 +49,35 @@ function EventDesc() {
     }));
   };
 
+  const handleShare = () => {
+    const url = window.location.href;
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        toast.info("URL copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Error copying URL:", err);
+      });
+  };
+
   if (loading) return <p>Loading...</p>;
   if (!event) return <p>Event not found!</p>;
 
   return (
     <div className="min-h-screen">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <img
         className="w-200 h-70 object-cover bg-center relative mx-auto rounded-2xl mt-2"
         src={event.image || ""}
@@ -127,7 +152,10 @@ function EventDesc() {
           >
             Respond
           </button>
-          <button className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:border-green-600 hover:text-green-600 transition">
+          <button
+            className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:border-green-600 hover:text-green-600 transition"
+            onClick={handleShare}
+          >
             Share
           </button>
         </div>
