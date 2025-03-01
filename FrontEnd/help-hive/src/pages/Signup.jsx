@@ -45,6 +45,7 @@ const Signup = ({ onLoginSuccess }) => {
         localStorage.setItem("refreshToken", res.data.refreshToken);
         onLoginSuccess(data);
         navigate("/profile");
+        localStorage.setItem("email", values.email);
         console.log(res.data);
       })
       .catch(function (err) {

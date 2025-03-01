@@ -36,6 +36,7 @@ const Login = ({ onLoginSuccess }) => {
         navigate("/profile");
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("refreshToken", res.data.refreshToken);
+        localStorage.setItem("email", values.email);
         console.log(res.data);
       })
       .catch(function (err) {

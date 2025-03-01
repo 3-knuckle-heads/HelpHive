@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
-import Select from "react-select/base";
+import Select from "react-select";
+import axios from "axios";
 
 const ProfilePage = ({ user, onLogout }) => {
   const [updatedUser, setUpdatedUser] = useState(user);
-  const [isEditingProfilePic, setIsEditingProfilePic] = useState(false);
-  const [newProfilePic, setNewProfilePic] = useState(null);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // States for editing
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newFirstName, setNewFirstName] = useState(user.firstName);
+  const [newLastName, setNewLastName] = useState(user.lastName);
 
   const [isEditingContact, setIsEditingContact] = useState(false);
-  const [newContact, setNewContact] = useState("");
+  const [newContact, setNewContact] = useState(user.contactNumber || "");
 
   const [isEditingSkills, setIsEditingSkills] = useState(false);
-  const [selectedSkills, setSelectedSkills] = useState(user.skills || []);
+  const [selectedSkills, setSelectedSkills] = useState(
+    user.skills?.map((skill) => ({ value: skill, label: skill })) || []
+  );
 
+  // Skill options
   const skillOptions = [
     { value: "Event Planning", label: "Event Planning" },
     { value: "First Aid", label: "First Aid" },
@@ -19,159 +27,132 @@ const ProfilePage = ({ user, onLogout }) => {
     { value: "Teaching", label: "Teaching" },
     { value: "Fundraising", label: "Fundraising" },
   ];
+
+  const [allUsers, setAllUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        const res = await axios.get(
+          "http://localhost:4000/api/v1/get_users",
+          config
+        );
+
+        setAllUsers(res.data);
+      } catch (err) {
+        console.error("Fetch failed!", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    if (allUsers.length > 0) {
+      const thisUser = allUsers.find(
+        (e) => e.email === localStorage.getItem("email")
+      );
+
+      if (thisUser) {
+        setUpdatedUser({ ...thisUser, profilePic: "" });
+      } else {
+        setUpdatedUser(null);
+      }
+    }
+  }, [allUsers]);
+
   useEffect(() => {
     setUpdatedUser(user);
+    setNewFirstName(user.firstName);
+    setNewLastName(user.lastName);
+    setNewContact(user.contactNumber || "");
+    setSelectedSkills(
+      user.skills?.map((skill) => ({ value: skill, label: skill })) || []
+    );
+    setHasChanges(false);
   }, [user]);
 
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewProfilePic(reader.result);
-        setUpdatedUser((prev) => ({ ...prev, profilePic: reader.result }));
-      };
-      reader.readAsDataURL(file);
-    }
-    setIsEditingProfilePic(false);
+  // Track if there are any changes
+  useEffect(() => {
+    const isChanged =
+      newFirstName !== user.firstName ||
+      newLastName !== user.lastName ||
+      newContact !== (user.contactNumber || "") ||
+      JSON.stringify(selectedSkills.map((s) => s.value)) !==
+        JSON.stringify(user.skills || []);
+
+    setHasChanges(isChanged);
+  }, [newFirstName, newLastName, newContact, selectedSkills, user]);
+
+  // Handle Name Change
+  const saveName = () => {
+    setUpdatedUser((prev) => ({
+      ...prev,
+      firstName: newFirstName,
+      lastName: newLastName,
+    }));
+    setIsEditingName(false);
   };
 
-  const handleCancelProfilePicEdit = () => {
-    setIsEditingProfilePic(false);
-    setNewProfilePic(null);
-  };
-
-  const handleContactChange = (e) => {
-    setNewContact(e.target.value);
-  };
-
+  // Handle Contact Change
   const saveContactNumber = () => {
     setUpdatedUser((prev) => ({ ...prev, contactNumber: newContact }));
     setIsEditingContact(false);
   };
 
-  const cancelContactEdit = () => {
-    setIsEditingContact(false);
-    setNewContact(""); // Reset input field
-  };
-
-  const handleSkillsChange = (selectedOptions) => {
-    setSelectedSkills(selectedOptions);
-  };
-
+  // Handle Skills Change
   const saveSkills = () => {
+    const selectedSkillValues = selectedSkills.map((skill) => skill.value);
     setUpdatedUser((prev) => ({
       ...prev,
-      skills: selectedSkills.map((skill) => skill.label),
+      skills: selectedSkillValues,
     }));
     setIsEditingSkills(false);
   };
 
-  const cancelSkillsEdit = () => {
-    setIsEditingSkills(false);
-    setSelectedSkills(user.skills || []);
+  // Function to Save All Changes (send to backend)
+  const saveProfileChanges = () => {
+    if (hasChanges) {
+      //updateUser(updatedUser);
+    }
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <div className="flex justify-center items-center bg-gray-50 p-6 flex-1 w-full">
         <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-6xl relative flex flex-col justify-center">
+          {/* Profile Picture */}
           <div className="relative w-48 h-48 mx-auto">
             <img
-              src={
-                newProfilePic || updatedUser.profilePic || "../assets/flood.jpg"
-              }
+              src={updatedUser.profilePic || "../assets/flood.jpg"}
               alt="Profile"
               className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
             />
-            <button
-              onClick={() => setIsEditingProfilePic(true)}
-              className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-md"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-6 h-6 text-gray-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-            </button>
-
-            {isEditingProfilePic && (
-              <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-                <div className="bg-white p-4 rounded-lg shadow-lg text-center">
-                  <h3 className="text-xl font-semibold mb-4">
-                    Edit Profile Picture
-                  </h3>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProfilePicChange}
-                    className="mb-4"
-                  />
-                  <div className="flex space-x-4">
-                    <button
-                      onClick={handleCancelProfilePicEdit}
-                      className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleCancelProfilePicEdit}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
-          <h2 className="text-4xl font-extrabold text-center text-gray-800 my-6">
-            {updatedUser.firstName + " " + updatedUser.lastName}
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
-                Full Name
-              </label>
-              <p className="text-lg font-medium">
-                {updatedUser.firstName + " " + updatedUser.lastName}
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
-                Email
-              </label>
-              <p className="text-lg font-medium">{updatedUser.email}</p>
-            </div>
-          </div>
-
+          {/* Full Name */}
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-600">
-              Contact Number
+              Full Name
             </label>
-            {!isEditingContact ? (
-              <div className="flex items-center justify-left">
+            {!isEditingName ? (
+              <div className="flex items-center justify-between">
                 <p className="text-lg font-medium">
-                  {updatedUser.contactNumber || "No contact number provided"}
+                  {(updatedUser.firstName || "Please") +
+                    " " +
+                    (updatedUser.lastName || "Wait")}
                 </p>
                 <button
-                  onClick={() => {
-                    setIsEditingContact(true);
-                    setNewContact(updatedUser.contactNumber || "");
-                  }}
-                  className="text-gray-500 hover:text-gray-800 pl-3"
+                  onClick={() => setIsEditingName(true)}
+                  className="text-gray-500 hover:text-gray-800"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -184,13 +165,63 @@ const ProfilePage = ({ user, onLogout }) => {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
+              <div className="flex space-x-4">
+                <input
+                  type="text"
+                  value={newFirstName}
+                  onChange={(e) => setNewFirstName(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-md"
+                  placeholder="First Name"
+                />
+                <input
+                  type="text"
+                  value={newLastName}
+                  onChange={(e) => setNewLastName(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-md"
+                  placeholder="Last Name"
+                />
+                <button
+                  onClick={saveName}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                >
+                  Save
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Contact Number */}
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-600">
+              Contact Number
+            </label>
+            {!isEditingContact ? (
+              <div className="flex items-center justify-between">
+                <p className="text-lg font-medium">
+                  {updatedUser.contactNumber || "No contact number provided"}
+                </p>
+                <button
+                  onClick={() => setIsEditingContact(true)}
+                  className="text-gray-500 hover:text-gray-800"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <div className="flex space-x-4">
                 <input
                   type="tel"
                   value={newContact}
-                  onChange={handleContactChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                  placeholder="Enter new contact number"
+                  onChange={(e) => setNewContact(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-md"
+                  placeholder="Enter contact number"
                 />
                 <button
                   onClick={saveContactNumber}
@@ -198,53 +229,65 @@ const ProfilePage = ({ user, onLogout }) => {
                 >
                   Save
                 </button>
+              </div>
+            )}
+          </div>
+
+          {/* Skills Selection */}
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-600">
+              Skills
+            </label>
+            {!isEditingSkills ? (
+              <div className="flex items-center justify-between">
+                <p className="text-lg font-medium">
+                  {updatedUser.skills?.join(", ") || "No skills listed"}
+                </p>
                 <button
-                  onClick={cancelContactEdit}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-md"
+                  onClick={() => setIsEditingSkills(true)}
+                  className="text-gray-500 hover:text-gray-800"
                 >
-                  Cancel
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Select
+                  options={skillOptions}
+                  value={selectedSkills}
+                  onChange={setSelectedSkills}
+                  isMulti
+                />
+                <button
+                  onClick={saveSkills}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                >
+                  Save
                 </button>
               </div>
             )}
           </div>
 
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">
-              Events Volunteered
-            </label>
-            <p className="text-lg font-medium">
-              {updatedUser.eventsVolunteered || "No events volunteered"}
-            </p>
-          </div>
+          {/* Save Changes Button (only appears if changes are made) */}
+          {hasChanges && (
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={saveProfileChanges}
+                className="px-6 py-2 bg-green-600 text-white rounded-md"
+              >
+                Save Profile
+              </button>
+            </div>
+          )}
 
-          {/* <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">
-              Events Hosted
-            </label>
-            <p className="text-lg font-medium">
-              {updatedUser.eventsHosted || "No events hosted"}
-            </p>
-          </div> */}
-
-          {/* <div>
-              <h5>Skills
-              </h5>
-              <Select>
-                skillOptions={skillOptions}
-                value={selectedSkills}
-                onChange={handleSkillsChange}
-                isMulti={true}
-              </Select>
-            </div> */}
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">
-              Skills
-            </label>
-            <p className="text-lg font-medium">
-              {updatedUser.skills || "No skills listed"}
-            </p>
-          </div>
-
+          {/* Logout Button */}
           <div className="mt-4 flex justify-end">
             <button
               onClick={onLogout}
