@@ -35,7 +35,9 @@ const ProfilePage = ({ user, onLogout }) => {
           {/* Profile Picture */}
           <div className="relative w-48 h-48 mx-auto">
             <img
-              src={newProfilePic || updatedUser.profilePic || "../assets/flood.jpg"}
+              src={
+                newProfilePic || updatedUser.profilePic || "../assets/flood.jpg"
+              }
               alt="Profile"
               className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
             />
@@ -62,7 +64,9 @@ const ProfilePage = ({ user, onLogout }) => {
             {isEditingProfilePic && (
               <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
                 <div className="bg-white p-4 rounded-lg shadow-lg text-center">
-                  <h3 className="text-xl font-semibold mb-4">Edit Profile Picture</h3>
+                  <h3 className="text-xl font-semibold mb-4">
+                    Edit Profile Picture
+                  </h3>
                   <input
                     type="file"
                     accept="image/*"
@@ -96,47 +100,62 @@ const ProfilePage = ({ user, onLogout }) => {
           {/* User Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
             <div>
-              <label className="block text-sm font-medium text-gray-600">Full Name</label>
+              <label className="block text-sm font-medium text-gray-600">
+                Full Name
+              </label>
               <p className="text-lg font-medium">
                 {updatedUser.firstName + " " + updatedUser.lastName}
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600">Email</label>
-              <p className="text-lg font-medium pl-2 sm:pl-4">{updatedUser.email}</p>
+              <label className="block text-sm font-medium text-gray-600">
+                Email
+              </label>
+              <p className="text-lg font-medium pl-2 sm:pl-4">
+                {updatedUser.email}
+              </p>
             </div>
           </div>
 
           {/* Display Contact Number (No editable input here) */}
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">Contact Number</label>
-            <p className="text-lg font-medium">{updatedUser.contactNumber || "No contact number provided"}</p>
+            <label className="block text-sm font-medium text-gray-600">
+              Contact Number
+            </label>
+            <p className="text-lg font-medium">
+              {updatedUser.contactNumber || "No contact number provided"}
+            </p>
           </div>
 
           {/* Volunteered & Hosted Events */}
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">Events Volunteered</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Events Volunteered
+            </label>
             <p className="text-lg font-medium">
               {updatedUser.eventsVolunteered || "No events volunteered"}
             </p>
           </div>
 
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">Events Hosted</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Events Hosted
+            </label>
             <p className="text-lg font-medium">
               {updatedUser.eventsHosted || "No events hosted"}
             </p>
           </div>
 
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">Skills</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Skills
+            </label>
             <p className="text-lg font-medium">
               {updatedUser.skills || "No skills listed"}
             </p>
           </div>
 
-          {/* Logout Button */}
           <div className="mt-4 flex justify-end">
             <button
               onClick={onLogout}

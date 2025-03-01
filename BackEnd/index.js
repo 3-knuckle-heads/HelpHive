@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import userCreateRoute from "./routes/userCreate.route.js";
 import userLoginRoute from "./routes/userLogin.route.js";
+import userGetRoute from "./routes/userGet.route.js";
 
 const app = express();
 app.use(express.json());
@@ -21,8 +22,8 @@ app.get("/api/v1/", (req, res) => {
 });
 
 app.use("/api/v1/signup", userCreateRoute);
-
 app.use("/api/v1/login", userLoginRoute);
+app.use("/api/v1/getusers", userGetRoute);
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },

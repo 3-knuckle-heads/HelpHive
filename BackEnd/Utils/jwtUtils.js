@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-function generateKey(user) {
+export function generateToken(user) {
   const payload = {
     name: user._id,
     email: user.email,
@@ -16,4 +16,15 @@ function generateKey(user) {
   return accessToken;
 }
 
-export default generateKey;
+export function generateRefreshToken(user) {
+  const payload = {
+    name: user._id,
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "1h",
+  });
+  return accessToken;
+}
