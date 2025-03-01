@@ -13,7 +13,6 @@ import EventDesc from "./pages/EventDesc.jsx";
 import Signup from "./pages/Signup.jsx";
 import MyEvents from "./pages/MyEvents";
 
-
 function App() {
   const [user, setUser] = useState(null);
 
@@ -22,8 +21,15 @@ function App() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     setUser(null);
   };
+
+  if (!user && localStorage.getItem("token")) {
+    setUser({
+      token: localStorage.getItem("token"),
+    });
+  }
 
   return (
     <div>
@@ -38,7 +44,7 @@ function App() {
           <Route path="/faq" element={<Faq />} />
           <Route path="/eventview/:id" element={<EventDesc />} />
           <Route path="/myevents" element={<MyEvents />} />
-          
+
           <Route
             path="/login"
             element={

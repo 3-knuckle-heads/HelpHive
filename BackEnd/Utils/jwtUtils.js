@@ -5,7 +5,7 @@ dotenv.config();
 
 function generateKey(user) {
   const payload = {
-    //   name: user._id,
+    name: user._id,
     email: user.email,
     role: user.role,
   };

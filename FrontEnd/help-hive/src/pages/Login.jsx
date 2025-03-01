@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
@@ -23,23 +24,27 @@ const Login = ({ onLoginSuccess }) => {
     });
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    setTimeout(() => {
-      const storedUserData = JSON.parse(localStorage.getItem("userData")) || {};
+    const data = {
+      email: values.email,
+      password: values.password,
+    };
 
-      if (
-        storedUserData[values.email] &&
-        storedUserData[values.email].password === values.password
-      ) {
-        // Simulate API call for login
-        onLoginSuccess(storedUserData[values.email]);
-        navigate("/");
-      } else {
-        toast.error("Invalid email or password.");
-      }
+    axios
+      .post("http://localhost:4000/api/v1/login", data)
+      .then(function (res) {
+        onLoginSuccess(data);
+        navigate("/profile");
+        localStorage.setItem("token", res.data.token);
+        console.log(res.data);
+      })
+      .catch(function (err) {
+        setSubmitting(false);
+        toast.error("Register failed! Please try again.");
+        console.log(err);
+      });
 
-      setSubmitting(false);
-      resetForm();
-    }, 2000);
+    setSubmitting(false);
+    resetForm();
   };
 
   return (
