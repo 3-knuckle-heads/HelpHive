@@ -57,7 +57,7 @@ function EventDesc() {
 
         {/* Display Google Map */}
         {event.latitude && event.longitude && (
-          <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
+          <LoadScript googleMapsApiKey="AlzaSybVNUt4RbkbgBhO48NBp6IiYiZoqctYEvS">
             <GoogleMap
               id="event-location-map"
               mapContainerStyle={{
@@ -81,7 +81,9 @@ function EventDesc() {
         )}
 
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold text-gray-800">About This Event</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            About This Event
+          </h2>
           <p className="text-gray-700 mt-2">
             {event.description ||
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}

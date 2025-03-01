@@ -121,8 +121,6 @@ const AddEventPage = () => {
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
             />
           </div>
-
-          {/* Google Map */}
           <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
             <GoogleMap
               id="event-location-map"
