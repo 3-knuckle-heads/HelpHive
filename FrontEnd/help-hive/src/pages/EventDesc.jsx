@@ -1,29 +1,61 @@
 import React, { useState, useEffect } from "react";
-import { GetEventById, UpdateEvent } from "../components/events";
 import { useParams } from "react-router-dom";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+//import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import axios from "axios";
 
 function EventDesc() {
   const { id } = useParams();
-  const [event, setEvent] = useState(GetEventById(parseInt(id)));
+  const [event, setEvent] = useState(null);
+  const [allEvents, setAllEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        const res = await axios.get(
+          "http://localhost:4000/api/v1/events",
+          config
+        );
+
+        setAllEvents(res.data);
+      } catch (err) {
+        console.error("Fetch failed!", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    if (allEvents.length > 0) {
+      const selectedEvent = allEvents.find((e) => e._id === id);
+      setEvent(selectedEvent || null);
+    }
+  }, [allEvents, id]);
 
   const handleRespond = () => {
-    setEvent((prevEvent) => {
-      const updatedEvent = {
-        ...prevEvent,
-        responded: parseInt(prevEvent.responded) + 1,
-      };
-
-      UpdateEvent(updatedEvent);
-      return updatedEvent;
-    });
+    if (!event) return;
+    setEvent((prevEvent) => ({
+      ...prevEvent,
+      responded: prevEvent.responded + 1,
+    }));
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (!event) return <p>Event not found!</p>;
 
   return (
     <div className="min-h-screen">
       <img
         className="w-200 h-70 object-cover bg-center relative mx-auto rounded-2xl mt-2"
-        src={event.image}
+        src={event.image || ""}
         alt="Event"
       />
       <h2 className="text-2xl md:text-4xl font-bold text-black text-center">
@@ -55,9 +87,8 @@ function EventDesc() {
           ></div>
         </div>
 
-        {/* Display Google Map */}
-        {event.latitude && event.longitude && (
-          <LoadScript googleMapsApiKey="AlzaSybVNUt4RbkbgBhO48NBp6IiYiZoqctYEvS">
+        {/* {event.latitude && event.longitude && (
+          <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
             <GoogleMap
               id="event-location-map"
               mapContainerStyle={{
@@ -78,7 +109,7 @@ function EventDesc() {
               />
             </GoogleMap>
           </LoadScript>
-        )}
+        )} */}
 
         <div className="mt-8">
           <h2 className="text-2xl font-semibold text-gray-800">
@@ -86,7 +117,7 @@ function EventDesc() {
           </h2>
           <p className="text-gray-700 mt-2">
             {event.description ||
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
           </p>
         </div>
         <div className="flex space-x-4 mt-6">

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { UpdateEvent } from "../components/events";
 import { useNavigate } from "react-router-dom";
 
 const EventDisplay = ({ event }) => {
@@ -13,13 +12,13 @@ const EventDisplay = ({ event }) => {
         responded: parseInt(prevEvent.responded) + 1,
       };
 
-      UpdateEvent(updatedEvent);
       return updatedEvent;
     });
   }
 
   function DetailsButtonHandler() {
-    navigate("/eventview/" + thisEvent.id);
+    console.log("thisEvent._id", thisEvent._id);
+    navigate("/eventview/" + thisEvent._id);
   }
 
   return (

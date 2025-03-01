@@ -6,6 +6,7 @@ import userCreateRoute from "./routes/userCreate.route.js";
 import userLoginRoute from "./routes/userLogin.route.js";
 import userGetRoute from "./routes/userGet.route.js";
 import eventCreateRoute from "./routes/eventCreate.route.js";
+import eventGetRoute from "./routes/eventGet.route.js";
 
 const app = express();
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use("/api/v1/login", userLoginRoute);
 app.use("/api/v1/get_users", userGetRoute);
 
 app.use("/api/v1/create_event", eventCreateRoute);
+app.use("/api/v1/events", eventGetRoute);
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },

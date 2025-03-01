@@ -32,7 +32,7 @@ const Login = ({ onLoginSuccess }) => {
     axios
       .post("http://localhost:4000/api/v1/login", data)
       .then(function (res) {
-        onLoginSuccess(data);
+        onLoginSuccess(res.data);
         navigate("/profile");
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("refreshToken", res.data.refreshToken);

@@ -60,7 +60,10 @@ const ProfilePage = ({ user, onLogout }) => {
   };
 
   const saveSkills = () => {
-    setUpdatedUser((prev) => ({ ...prev, skills: selectedSkills.map(skill => skill.label) }));
+    setUpdatedUser((prev) => ({
+      ...prev,
+      skills: selectedSkills.map((skill) => skill.label),
+    }));
     setIsEditingSkills(false);
   };
 
@@ -71,10 +74,8 @@ const ProfilePage = ({ user, onLogout }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      
       <div className="flex justify-center items-center bg-gray-50 p-6 flex-1 w-full">
         <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-6xl relative flex flex-col justify-center">
-          
           <div className="relative w-48 h-48 mx-auto">
             <img
               src={
@@ -134,12 +135,10 @@ const ProfilePage = ({ user, onLogout }) => {
             )}
           </div>
 
-          
           <h2 className="text-4xl font-extrabold text-center text-gray-800 my-6">
             {updatedUser.firstName + " " + updatedUser.lastName}
           </h2>
 
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
             <div>
               <label className="block text-sm font-medium text-gray-600">
@@ -154,17 +153,16 @@ const ProfilePage = ({ user, onLogout }) => {
               <label className="block text-sm font-medium text-gray-600">
                 Email
               </label>
-              <p className="text-lg font-medium pl-2 sm:pl-4">
-                {updatedUser.email}
-              </p>
+              <p className="text-lg font-medium">{updatedUser.email}</p>
             </div>
           </div>
 
-          {/* Contact Number Section */}
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">Contact Number</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Contact Number
+            </label>
             {!isEditingContact ? (
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-left">
                 <p className="text-lg font-medium">
                   {updatedUser.contactNumber || "No contact number provided"}
                 </p>
@@ -173,21 +171,15 @@ const ProfilePage = ({ user, onLogout }) => {
                     setIsEditingContact(true);
                     setNewContact(updatedUser.contactNumber || "");
                   }}
-                  className="text-gray-500 hover:text-gray-800"
+                  className="text-gray-500 hover:text-gray-800 pl-3"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
+                    width="24"
+                    height="24"
                     viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-6 h-6"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4v16m8-8H4"
-                    />
+                    <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
                   </svg>
                 </button>
               </div>
@@ -215,9 +207,7 @@ const ProfilePage = ({ user, onLogout }) => {
               </div>
             )}
           </div>
-              
-            
-          
+
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-600">
               Events Volunteered
@@ -227,16 +217,16 @@ const ProfilePage = ({ user, onLogout }) => {
             </p>
           </div>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <label className="block text-sm font-medium text-gray-600">
               Events Hosted
             </label>
             <p className="text-lg font-medium">
               {updatedUser.eventsHosted || "No events hosted"}
             </p>
-          </div>
+          </div> */}
 
-            {/* <div>
+          {/* <div>
               <h5>Skills
               </h5>
               <Select>

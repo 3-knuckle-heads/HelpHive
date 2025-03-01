@@ -4,14 +4,12 @@ import helphiveLogo from "../assets/helphive.png";
 
 const Navbar = ({ user }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const location = useLocation(); 
-  
+  const location = useLocation();
 
   useEffect(() => {
-    setIsDropdownOpen(false); 
+    setIsDropdownOpen(false);
   }, [location]);
 
-  
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
@@ -49,8 +47,6 @@ const Navbar = ({ user }) => {
           className="peer-checked:block md:block hidden"
         >
           <ul className="flex flex-col md:flex-row gap-y-4 gap-x-4 lg:gap-x-6">
-            
-          
             <li className="relative">
               <button
                 onClick={toggleDropdown}
@@ -76,35 +72,45 @@ const Navbar = ({ user }) => {
               </button>
               {isDropdownOpen && (
                 <ul className="absolute left-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                  <li>
-                    <Link
-                      to="/myevents"
-                      className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
-                    >
-                      My Events
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/eventcreate"
-                      className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
-                    >
-                      Add Event
-                    </Link>
-                  </li>
+                  {user && (
+                    <li>
+                      <Link
+                        to="/myevents"
+                        className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
+                      >
+                        My Events
+                      </Link>
+                    </li>
+                  )}
+                  {user && (
+                    <li>
+                      <Link
+                        to="/eventcreate"
+                        className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
+                      >
+                        Add Event
+                      </Link>
+                    </li>
+                  )}
+
                   <li>
                     <Link
                       to="/explore"
                       className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
                     >
-                      Events
+                      All Events
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/certificate" className="block px-4 py-2 text-gray-600 hover:bg-orange-100">
-                      Certification
-                    </Link>
-                  </li>
+                  {user && (
+                    <li>
+                      <Link
+                        to="/certificate"
+                        className="block px-4 py-2 text-gray-600 hover:bg-orange-100"
+                      >
+                        Certification
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               )}
             </li>

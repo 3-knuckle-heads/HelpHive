@@ -19,6 +19,7 @@ function App() {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
+    console.log("userData", userData);
   };
 
   const handleLogout = () => {

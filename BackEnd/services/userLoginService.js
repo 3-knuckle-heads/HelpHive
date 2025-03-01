@@ -5,14 +5,20 @@ import { verifyToken } from "../Utils/authMiddleware.js";
 
 async function loginUser_DB(email, password) {
   try {
-    const existing = await user.findOne({ email });
+    let existing = await user.findOne({ email });
 
     if (existing) {
       const match = bcrypt.compare(password, existing.password);
 
       if (match) {
         const token = generateToken(existing);
-        return token;
+        existing = existing._doc;
+        existing["password"] = "";
+
+        const rUser = { ...existing, token: token };
+
+        console.log("rUser", rUser);
+        return rUser;
       } else {
         throw new Error("Password does not match");
       }

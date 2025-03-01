@@ -30,10 +30,15 @@ export async function loginUser(req, res) {
   try {
     const { email, password } = req.body;
 
-    const token = await loginUser_DB(email, password);
+    const data = await loginUser_DB(email, password);
     const rtoken = generateRefreshToken(email);
 
-    res.json({ token: token, refreshToken: rtoken });
+    const rUser = {
+      ...data,
+      refreshToken: rtoken,
+    };
+
+    res.json(rUser);
   } catch (error) {
     res.status(401).json({ message: "Invalid credentials" });
   }
