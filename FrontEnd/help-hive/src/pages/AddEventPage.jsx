@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const AddEventPage = ({ currentUser }) => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const AddEventPage = ({ currentUser }) => {
     organizer: currentUser || "HelpHive",
     location: "",
     image: "",
-    date:"",
+    date: "",
     latitude: null,
     longitude: null,
   });
@@ -42,8 +43,10 @@ const AddEventPage = ({ currentUser }) => {
 
     localStorage.setItem("myEvents", JSON.stringify(updatedEvents));
 
-    alert("Event added successfully!");
-    navigate("/myevents"); // Redirect to My Events page
+    toast.info("Event added successfully!");
+    setTimeout(() => {
+      navigate("/myevents");
+    }, 2000);
 
     setNewEvent({
       title: "",
@@ -52,7 +55,7 @@ const AddEventPage = ({ currentUser }) => {
       organizer: currentUser || "HelpHive",
       location: "",
       image: "",
-      date:"",
+      date: "",
       latitude: null,
       longitude: null,
     });
@@ -60,6 +63,18 @@ const AddEventPage = ({ currentUser }) => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="container mx-auto max-w-4xl bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
           Add New Event

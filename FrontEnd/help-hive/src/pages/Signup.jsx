@@ -41,6 +41,8 @@ const Signup = ({ onLoginSuccess }) => {
     axios
       .post("http://localhost:4000/api/v1/signup", data)
       .then(function (res) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("refreshToken", res.data.refreshToken);
         onLoginSuccess(data);
         navigate("/profile");
         console.log(res.data);

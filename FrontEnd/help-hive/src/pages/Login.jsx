@@ -40,7 +40,7 @@ const Login = ({ onLoginSuccess }) => {
       })
       .catch(function (err) {
         setSubmitting(false);
-        toast.error("Register failed! Please try again.");
+        toast.error("Login failed! Please try again.");
         console.log(err);
       });
 

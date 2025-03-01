@@ -23,6 +23,7 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     setUser(null);
   };
 
@@ -46,7 +47,6 @@ function App() {
           <Route path="/eventview/:id" element={<EventDesc />} />
           <Route path="/myevents" element={<MyEvents />} />
           <Route path="/certificate" element={<Certificate />} />
-  
 
           <Route
             path="/login"
