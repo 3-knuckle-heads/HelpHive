@@ -40,9 +40,18 @@ const ProfilePage = ({ user, onLogout }) => {
     setNewProfilePic(null);
   };
 
+  const handleContactChange = (e) => {
+    setNewContact(e.target.value);
+  };
+
   const saveContactNumber = () => {
     setUpdatedUser((prev) => ({ ...prev, contactNumber: newContact }));
     setIsEditingContact(false);
+  };
+
+  const cancelContactEdit = () => {
+    setIsEditingContact(false);
+    setNewContact(""); // Reset input field
   };
 
   const toggleSkill = (skill) => {
@@ -147,14 +156,60 @@ const ProfilePage = ({ user, onLogout }) => {
             </div>
           </div>
 
-          {/* Display Contact Number (No editable input here) */}
+          {/* Contact Number Section */}
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-600">
-              Contact Number
-            </label>
-            <p className="text-lg font-medium">
-              {updatedUser.contactNumber || "No contact number provided"}
-            </p>
+            <label className="block text-sm font-medium text-gray-600">Contact Number</label>
+            {!isEditingContact ? (
+              <div className="flex items-center justify-between">
+                <p className="text-lg font-medium">
+                  {updatedUser.contactNumber || "No contact number provided"}
+                </p>
+                <button
+                  onClick={() => {
+                    setIsEditingContact(true);
+                    setNewContact(updatedUser.contactNumber || "");
+                  }}
+                  className="text-gray-500 hover:text-gray-800"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <input
+                  type="tel"
+                  value={newContact}
+                  onChange={handleContactChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                  placeholder="Enter new contact number"
+                />
+                <button
+                  onClick={saveContactNumber}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={cancelContactEdit}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-md"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
               
             
