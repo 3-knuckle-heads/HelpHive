@@ -20,6 +20,7 @@ const AddEventPage = ({ currentUser }) => {
   const navigate = useNavigate();
   const [newEvent, setNewEvent] = useState({
     title: "",
+    desc: "",
     needed: "",
     responded: "0",
     organizer: currentUser || "HelpHive",
@@ -109,6 +110,7 @@ const AddEventPage = ({ currentUser }) => {
           // Clear the form
           setNewEvent({
             title: "",
+            desc: "",
             needed: "",
             responded: "0",
             organizer: currentUser || "HelpHive",
@@ -155,6 +157,18 @@ const AddEventPage = ({ currentUser }) => {
               type="text"
               name="title"
               value={newEvent.title}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-md mt-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600">
+              Event Description
+            </label>
+            <input
+              type="text"
+              name="desc"
+              value={newEvent.desc}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
             />

@@ -141,7 +141,7 @@ function EventDesc() {
             About This Event
           </h2>
           <p className="text-gray-700 mt-2">
-            {event.description ||
+            {event.desc ||
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
           </p>
         </div>
