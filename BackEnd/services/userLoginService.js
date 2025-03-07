@@ -11,11 +11,10 @@ async function loginUser_DB(email, password) {
       const match = bcrypt.compare(password, existing.password);
 
       if (match) {
-        const token = generateToken(existing);
         existing = existing._doc;
         existing["password"] = "";
 
-        const rUser = { ...existing, token: token };
+        const rUser = { ...existing };
 
         console.log("rUser", rUser);
         return rUser;

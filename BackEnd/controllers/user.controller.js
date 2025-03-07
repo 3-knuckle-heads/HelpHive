@@ -1,7 +1,7 @@
 import createUser_DB from "../services/userCreateService.js";
 import loginUser_DB from "../services/userLoginService.js";
 import getAllUsers_DB from "../services/userGetService.js";
-import { generateRefreshToken } from "../Utils/jwtUtils.js";
+import { generateToken, generateRefreshToken } from "../Utils/jwtUtils.js";
 
 export async function createUser(req, res) {
   try {
@@ -9,8 +9,11 @@ export async function createUser(req, res) {
     //   console.log("req.body", req.body);
     const user = await createUser_DB(data);
 
-    const token = generateRefreshToken(data);
-    const rtoken = generateRefreshToken(data.email);
+    const uid = user._id.toString();
+    console.log("user._id", uid);
+
+    const token = generateToken(uid);
+    const rtoken = generateRefreshToken(uid);
 
     res.status(201).json({
       user: user,
@@ -29,12 +32,17 @@ export async function createUser(req, res) {
 export async function loginUser(req, res) {
   try {
     const { email, password } = req.body;
+    const user = await loginUser_DB(email, password);
 
-    const data = await loginUser_DB(email, password);
-    const rtoken = generateRefreshToken(email);
+    const uid = user._id.toString();
+    console.log("userId", uid);
+
+    const token = generateToken(uid);
+    const rtoken = generateRefreshToken(uid);
 
     const rUser = {
-      ...data,
+      ...user,
+      token: token,
       refreshToken: rtoken,
     };
 

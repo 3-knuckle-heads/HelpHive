@@ -7,6 +7,7 @@ import userLoginRoute from "./routes/userLogin.route.js";
 import userGetRoute from "./routes/userGet.route.js";
 import eventCreateRoute from "./routes/eventCreate.route.js";
 import eventGetRoute from "./routes/eventGet.route.js";
+import refreshTokenRoute from "./routes/refreshTokens.route.js";
 
 const app = express();
 app.use(express.json());
@@ -29,6 +30,8 @@ app.use("/api/v1/get_users", userGetRoute);
 
 app.use("/api/v1/create_event", eventCreateRoute);
 app.use("/api/v1/events", eventGetRoute);
+
+app.use("/api/v1/refresh_tokens", refreshTokenRoute);
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },

@@ -47,6 +47,23 @@ const ProfilePage = ({ user, onLogout }) => {
         setAllUsers(res.data);
       } catch (err) {
         console.error("Fetch failed!", err);
+
+        try {
+          const data = {
+            refreshToken: localStorage.getItem("refreshToken"),
+          };
+
+          const rres = await axios.post(
+            "http://localhost:4000/api/v1/refresh_tokens",
+            data
+          );
+
+          console.log("refreshed data: ", rres.data);
+          localStorage.setItem("token", rres.data.token);
+          localStorage.setItem("refreshToken", rres.data.refreshToken);
+        } catch (error) {
+          console.error(error);
+        }
       } finally {
         setLoading(false);
       }
