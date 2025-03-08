@@ -1,21 +1,45 @@
-import event from "../models/event.model.js";
+import { cloudinary } from "../cloudinaryConfig.js";
+import eventModel from "../models/event.model.js";
 
-async function createEvent_DB(userData) {
-  const { title, desc, needed, responded, organizer, location, image, date } =
-    userData;
+async function uploadToCloudinary(file) {
+  try {
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: "event_images",
+    });
+    return result.secure_url;
+  } catch (error) {
+    console.error("Cloudinary Upload Error:", error);
+    throw new Error("Failed to upload image");
+  }
+}
 
-  const nEvent = new event({
-    title: title,
-    desc: desc,
-    needed: needed,
-    responded: responded,
-    organizer: organizer,
-    location: location,
-    image: image,
-    date: date,
-  });
+export async function createEvent_DB(userData, file) {
+  try {
+    let imageUrl = null;
 
-  return await nEvent.save();
+    if (file) {
+      imageUrl = await uploadToCloudinary(file);
+    }
+
+    const { title, desc, needed, responded, organizer, location, date } =
+      userData;
+
+    const nEvent = new eventModel({
+      title,
+      desc,
+      needed,
+      responded,
+      organizer,
+      location,
+      image: imageUrl,
+      date,
+    });
+
+    return await nEvent.save();
+  } catch (error) {
+    console.error("Error creating event:", error);
+    throw error;
+  }
 }
 
 export default createEvent_DB;

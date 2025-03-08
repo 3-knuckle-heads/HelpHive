@@ -39,100 +39,66 @@ const AddEventPage = ({ currentUser }) => {
     }));
   };
 
-  const handleImageChange = async (file) => {
-    if (!file) return null;
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "main_preset"); // Replace with your preset
-
-    try {
-      const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dzi8td0tj/image/upload",
-        formData
-      );
-
-      if (response.data.secure_url) {
-        return response.data.secure_url; // Return image URL after upload
-      } else {
-        console.error("Upload failed:", response.data);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      return null;
-    }
-  };
-
   const handleAddEvent = async (e) => {
     e.preventDefault(); // Prevent form submission
 
-    if (!newEvent.image && newEvent.file) {
-      toast.info("Uploading image, please wait...");
+    if (!newEvent.file) {
+      toast.error("Please select an image!");
+      return;
+    }
 
-      // Wait for image upload
-      const uploadedImageUrl = await handleImageChange(newEvent.file);
-      console.log("uploadedImageUrl", uploadedImageUrl);
+    toast.info("Creating your event");
 
-      if (!uploadedImageUrl) {
-        toast.error("Image upload failed!");
-        return;
-      }
+    const formData = new FormData();
+    formData.append("file", newEvent.file); // Append file
+    formData.append("title", newEvent.title);
+    formData.append("desc", newEvent.desc);
+    formData.append("needed", newEvent.needed);
+    formData.append("responded", newEvent.responded);
+    formData.append("organizer", newEvent.organizer);
+    formData.append("location", newEvent.location);
+    formData.append("date", newEvent.date);
 
-      // Update event with uploaded image URL
-      setNewEvent((prevState) => ({
-        ...prevState,
-        image: uploadedImageUrl,
-        file: null, // Remove file after uploading
-      }));
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data", // Important for file upload
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/create_event",
+        formData,
+        config
+      );
+      toast.success("Event added successfully!");
+      console.log(response.data);
+
+      // Clear the form
+      setNewEvent({
+        title: "",
+        desc: "",
+        needed: "",
+        responded: "0",
+        organizer: currentUser || "HelpHive",
+        location: "",
+        image: "", // This will be handled by backend
+        date: "",
+        file: null,
+      });
+
+      // Navigate after 2 seconds
+      setTimeout(() => {
+        navigate("/myevents");
+      }, 2000);
+    } catch (error) {
+      toast.error("Event creation failed! Please try again.");
+      console.error(error);
     }
   };
 
-  // useEffect will trigger once the image is uploaded and the state is updated
-  useEffect(() => {
-    if (newEvent.image && newEvent.file === null) {
-      // Now send the event data after the image URL has been updated
-      const updatedEvent = { ...newEvent, file: undefined }; // Remove file before sending
-      console.log("Final Event Data:", updatedEvent);
-
-      const config = {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      };
-
-      axios
-        .post("http://localhost:4000/api/v1/create_event", updatedEvent, config)
-        .then((res) => {
-          toast.success("Event added successfully!");
-          console.log(res.data);
-
-          // Clear the form
-          setNewEvent({
-            title: "",
-            desc: "",
-            needed: "",
-            responded: "0",
-            organizer: currentUser || "HelpHive",
-            location: "",
-            image: "",
-            date: "",
-            file: null, // Clear file input
-          });
-
-          // Navigate after 2 seconds
-          setTimeout(() => {
-            navigate("/myevents");
-          }, 2000);
-        })
-        .catch((err) => {
-          toast.error("Event creation failed! Please try again.");
-          console.log(err);
-        });
-    }
-  }, [newEvent, navigate]);
-
-  // Handle file selection & upload
+  // Handle file selection
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
 

@@ -4,17 +4,16 @@ import getAllEvents_DB from "../services/eventGetService.js";
 export async function createEvent(req, res) {
   try {
     const data = req.body;
-    const event = await createEvent_DB(data);
+    const file = req.file;
+    const event = await createEvent_DB(data, file);
 
     res.status(201).json({
-      event: event,
-      message: "Event has been created.",
+      event,
+      message: "Event has been created successfully.",
     });
   } catch (error) {
-    console.log("error: ", error);
-    res.status(400).json({
-      message: error.message,
-    });
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
