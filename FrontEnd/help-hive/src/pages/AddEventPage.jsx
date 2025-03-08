@@ -5,8 +5,21 @@ import axios from "axios";
 
 // Divisions and their corresponding districts
 const bangladeshLocations = {
-  Dhaka: ["Dhaka", "Gazipur", "Narayanganj", "Tangail", "Manikganj", "Munshiganj"],
-  Chattogram: ["Chattogram", "Cox's Bazar", "Feni", "Khagrachhari", "Rangamati"],
+  Dhaka: [
+    "Dhaka",
+    "Gazipur",
+    "Narayanganj",
+    "Tangail",
+    "Manikganj",
+    "Munshiganj",
+  ],
+  Chattogram: [
+    "Chattogram",
+    "Cox's Bazar",
+    "Feni",
+    "Khagrachhari",
+    "Rangamati",
+  ],
   Khulna: ["Khulna", "Jessore", "Satkhira", "Bagerhat", "Kushtia"],
   Rajshahi: ["Rajshahi", "Bogra", "Naogaon", "Pabna", "Sirajganj"],
   Sylhet: ["Sylhet", "Moulvibazar", "Habiganj", "Sunamganj"],
@@ -55,9 +68,13 @@ const AddEventPage = ({ currentUser }) => {
     formData.append("needed", newEvent.needed);
     formData.append("responded", newEvent.responded);
     formData.append("organizer", newEvent.organizer);
+    formData.append("mapLink", newEvent.mapLink);
     formData.append("division", newEvent.division);
     formData.append("district", newEvent.district);
     formData.append("date", newEvent.date);
+
+    console.log("newEvent.mapLink", newEvent.mapLink);
+    console.log("newEvent.title", newEvent.title);
 
     const config = {
       headers: {
@@ -80,7 +97,7 @@ const AddEventPage = ({ currentUser }) => {
         desc: "",
         needed: "",
         responded: "0",
-        organizer:localStorage.getItem("email") || "HelpHive",
+        organizer: localStorage.getItem("email") || "HelpHive",
         division: "",
         district: "",
         date: "",
@@ -91,7 +108,9 @@ const AddEventPage = ({ currentUser }) => {
         navigate("/myevents");
       }, 2000);
     } catch (error) {
-      toast.error("Event creation failed! Event with same data may already exist.");
+      toast.error(
+        "Event creation failed! Event with same data may already exist."
+      );
       console.error(error);
     }
   };
@@ -107,10 +126,14 @@ const AddEventPage = ({ currentUser }) => {
     <div className="min-h-screen bg-gray-100 p-6">
       <ToastContainer position="bottom-right" autoClose={2000} />
       <div className="container mx-auto max-w-4xl bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-extrabold text-gray-800 mb-6">Add New Event</h2>
+        <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
+          Add New Event
+        </h2>
         <form>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">Event Title</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Event Title
+            </label>
             <input
               type="text"
               name="title"
@@ -120,7 +143,9 @@ const AddEventPage = ({ currentUser }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">Event Description</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Event Description
+            </label>
             <input
               type="text"
               name="desc"
@@ -131,7 +156,9 @@ const AddEventPage = ({ currentUser }) => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600">Needed Volunteers</label>
+              <label className="block text-sm font-medium text-gray-600">
+                Needed Volunteers
+              </label>
               <input
                 type="number"
                 name="needed"
@@ -141,7 +168,9 @@ const AddEventPage = ({ currentUser }) => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600">Event Date</label>
+              <label className="block text-sm font-medium text-gray-600">
+                Event Date
+              </label>
               <input
                 type="date"
                 name="date"
@@ -152,7 +181,9 @@ const AddEventPage = ({ currentUser }) => {
             </div>
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">Division</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Division
+            </label>
             <select
               name="division"
               value={newEvent.division}
@@ -168,7 +199,9 @@ const AddEventPage = ({ currentUser }) => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">District</label>
+            <label className="block text-sm font-medium text-gray-600">
+              District
+            </label>
             <select
               name="district"
               value={newEvent.district}
@@ -186,7 +219,9 @@ const AddEventPage = ({ currentUser }) => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">Google Maps Location Link</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Google Maps Location Link
+            </label>
             <input
               type="text"
               name="mapLink"
@@ -197,7 +232,9 @@ const AddEventPage = ({ currentUser }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">Event Image</label>
+            <label className="block text-sm font-medium text-gray-600">
+              Event Image
+            </label>
             <input
               type="file"
               name="image"

@@ -21,12 +21,21 @@ export async function createEvent_DB(userData, file) {
       imageUrl = await uploadToCloudinary(file);
     }
 
-    const { title, desc, needed, responded, organizer, location, date } =
-      userData;
+    const {
+      title,
+      desc,
+      needed,
+      responded,
+      organizer,
+      division,
+      district,
+      mapLink,
+      date,
+    } = userData;
 
     console.log("userData", userData);
 
-    let uid = title + "_" + organizer + "_" + location;
+    let uid = title + "_" + organizer + "_" + district;
     uid.replace(" ", "_");
     console.log("uid", uid);
 
@@ -45,7 +54,9 @@ export async function createEvent_DB(userData, file) {
       needed,
       responded,
       organizer,
-      location,
+      division,
+      district,
+      mapLink,
       image: imageUrl,
       date,
       uid,

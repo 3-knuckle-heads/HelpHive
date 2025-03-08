@@ -6,10 +6,13 @@ const eventSchema = new mongoose.Schema({
   needed: Number,
   responded: Number,
   organizer: String,
-  location: String,
+  division: String,
+  district: String,
+  mapLink: String,
   image: String,
   date: String,
   uid: String,
+  responders: [],
 });
 
 const Event = mongoose.model("Event", eventSchema);
