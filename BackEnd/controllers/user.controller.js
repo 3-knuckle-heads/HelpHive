@@ -67,7 +67,12 @@ export async function updateUser(req, res) {
     const data = req.body;
     const file = req.file;
 
-    await updateUser_DB(data, file);
+    const updatedUser = await updateUser_DB(data, file);
+
+    res.status(200).json({
+      updatedUser,
+      message: "User updated successfully.",
+    });
   } catch (error) {
     res.status(500).json({ message: error });
   }

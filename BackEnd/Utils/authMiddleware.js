@@ -5,7 +5,7 @@ import userM from "../models/user.model.js";
 dotenv.config();
 
 export async function authenticateToken(req, res, next) {
-  console.log("Authenticating token");
+  console.log("Verifying token");
   const authHeader = req.header("Authorization");
 
   if (!authHeader) {
@@ -31,6 +31,7 @@ export async function authenticateToken(req, res, next) {
     const retUser = await userM.findOne({ id });
 
     req.user = retUser;
+    console.log("Verify token success");
     next();
   });
 }

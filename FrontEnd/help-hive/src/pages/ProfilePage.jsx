@@ -123,7 +123,7 @@ const ProfilePage = ({ user, onLogout }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchUsers = async () => {
       try {
         const config = {
           headers: {
@@ -160,7 +160,7 @@ const ProfilePage = ({ user, onLogout }) => {
       }
     };
 
-    fetchEvents();
+    fetchUsers();
   }, []);
 
   useEffect(() => {
@@ -170,7 +170,11 @@ const ProfilePage = ({ user, onLogout }) => {
       );
 
       if (thisUser) {
-        setUpdatedUser({ ...thisUser, profilePic: "" });
+        setUpdatedUser(thisUser);
+
+        setNewFirstName(thisUser.firstName);
+        setNewLastName(thisUser.lastName);
+        setNewContact(thisUser.contactNumber);
       } else {
         setUpdatedUser(null);
       }
@@ -325,7 +329,7 @@ const ProfilePage = ({ user, onLogout }) => {
               src={
                 profileImagePreview ||
                 updatedUser.profilePic ||
-                "../assets/flood.jpg"
+                "../assets/loading.jpg"
               }
               alt="Profile"
               className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
@@ -469,7 +473,7 @@ const ProfilePage = ({ user, onLogout }) => {
             {!isEditingSkills ? (
               <div className="flex items-center justify-between">
                 <p className="text-lg font-medium">
-                  {updatedUser.skills?.join(", ") || "No skills listed"}
+                  {updatedUser.skills || "No skills listed"}
                 </p>
                 <button
                   onClick={() => setIsEditingSkills(true)}
