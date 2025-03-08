@@ -12,7 +12,7 @@ import Faq from "./pages/Faq.jsx";
 import EventDesc from "./pages/EventDesc.jsx";
 import Signup from "./pages/Signup.jsx";
 import MyEvents from "./pages/MyEvents";
-import Certificate from "./components/Certificate.jsx";
+import Certificate from "./pages/Certificate.jsx";
 
 function App() {
   const [user, setUser] = useState(null);

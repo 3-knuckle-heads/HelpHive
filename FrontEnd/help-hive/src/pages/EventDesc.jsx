@@ -91,8 +91,18 @@ function EventDesc() {
           Organized by: <span className="font-semibold">{event.organizer}</span>
         </p>
         <p className="text-lg text-gray-700 mt-2">
-          Location: <span className="font-semibold">{event.location}</span>
+          Division: <span className="font-semibold">{event.division}</span>
         </p>
+        <p className="text-lg text-gray-700 mt-2">
+          District: <span className="font-semibold">{event.district}</span>
+        </p>
+        {event.mapLink && (
+          <p className="text-lg text-blue-600 mt-2">
+            <a href={event.mapLink} target="_blank" rel="noopener noreferrer" className="underline">
+              View on Google Maps
+            </a>
+          </p>
+        )}
         <p className="text-lg text-gray-700 mt-2">
           Volunteers:{" "}
           <span className="font-semibold">
