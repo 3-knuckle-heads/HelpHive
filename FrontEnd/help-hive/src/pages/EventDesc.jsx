@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-//import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
@@ -122,29 +122,7 @@ function EventDesc() {
           ></div>
         </div>
 
-        {/* {event.latitude && event.longitude && (
-          <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
-            <GoogleMap
-              id="event-location-map"
-              mapContainerStyle={{
-                height: "400px",
-                width: "100%",
-              }}
-              center={{
-                lat: event.latitude,
-                lng: event.longitude,
-              }}
-              zoom={15}
-            >
-              <Marker
-                position={{
-                  lat: event.latitude,
-                  lng: event.longitude,
-                }}
-              />
-            </GoogleMap>
-          </LoadScript>
-        )} */}
+       
 
         <div className="mt-8">
           <h2 className="text-2xl font-semibold text-gray-800">
