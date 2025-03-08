@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import { FaPaperPlane } from "react-icons/fa"; // Icon for send button
 
 function Faq() {
   const [question, setQuestion] = useState("");
@@ -40,50 +41,61 @@ function Faq() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white rounded-lg p-6 shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-semibold text-blue-600 mb-6 text-center">
-          Help-Hive Chatbot
-        </h2>
+    <div className="flex flex-col h-screen bg-gray-900 text-white">
+      {/* Header */}
+      <header className="p-4 bg-gray-800 text-center text-lg font-semibold">
+        Help-Hive AI Chat
+      </header>
 
-        <div className="bg-gray-50 rounded-lg p-4 shadow-inner h-96 overflow-y-auto mb-6">
-          {messages.map((message, index) => (
+      {/* Chat Container */}
+      <div className="flex-grow overflow-y-auto p-6 space-y-4">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            ref={index === messages.length - 1 ? lastMessageRef : null} // Attach ref to last message
+            className={`flex ${
+              message.type === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
             <div
-              key={index}
-              ref={index === messages.length - 1 ? lastMessageRef : null} // Attach ref to last message
-              className={`p-3 rounded-lg mb-3 max-w-xs ${
-                message.type === "bot" ? "bg-blue-100" : "bg-green-100 self-end"
+              className={`p-4 max-w-lg rounded-xl shadow-md ${
+                message.type === "bot"
+                  ? "bg-gray-700 text-white"
+                  : "bg-blue-600 text-white"
               }`}
             >
-              <strong
-                className={`font-semibold ${
-                  message.type === "bot" ? "text-blue-800" : "text-green-800"
-                }`}
-              >
-                {message.type === "bot" ? "Bot:" : "You:"}
-              </strong>
-              <p className="text-gray-700">{message.text}</p>
+              <p className="text-sm">{message.text}</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
 
-        <div className="flex">
-          <input
-            type="text"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && fetchAnswer()}
-            placeholder="Type your question..."
-            className="flex-grow p-3 border-2 border-blue-600 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={fetchAnswer}
-            disabled={loading}
-            className="bg-blue-600 text-white p-3 rounded-r hover:bg-blue-700 transition duration-200"
-          >
-            {loading ? "Sending..." : "Send"}
-          </button>
-        </div>
+        {/* Typing Indicator */}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="p-4 max-w-lg rounded-xl bg-gray-700 text-white">
+              <p className="text-sm">Typing...</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Input Box */}
+      <div className="p-4 bg-gray-800 flex items-center">
+        <input
+          type="text"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && fetchAnswer()}
+          placeholder="Type your question..."
+          className="flex-grow p-3 bg-gray-700 text-white rounded-lg outline-none border-none"
+        />
+        <button
+          onClick={fetchAnswer}
+          disabled={loading}
+          className="ml-4 bg-blue-600 p-3 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center"
+        >
+          <FaPaperPlane className="text-white" />
+        </button>
       </div>
     </div>
   );
