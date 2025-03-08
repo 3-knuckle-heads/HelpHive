@@ -20,6 +20,7 @@ async function respondToEvent_DB(eventId, userId) {
 
     return updatedEvent;
   } catch (error) {
+    console.log("error", error);
     throw new Error(error.message);
   }
 }

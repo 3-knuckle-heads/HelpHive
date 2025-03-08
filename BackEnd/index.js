@@ -8,6 +8,7 @@ import userGetRoute from "./routes/userGet.route.js";
 import userUpdateRoute from "./routes/userUpdate.route.js";
 import eventCreateRoute from "./routes/eventCreate.route.js";
 import eventGetRoute from "./routes/eventGet.route.js";
+import eventRespondRoute from "./routes/eventRespondRoute.js";
 import refreshTokenRoute from "./routes/refreshTokens.route.js";
 import geminirouter from "./routes/geminirouter.js";
 
@@ -33,6 +34,7 @@ app.use("/api/v1/update_user", userUpdateRoute);
 
 app.use("/api/v1/create_event", eventCreateRoute);
 app.use("/api/v1/events", eventGetRoute);
+app.use("/api/v1/respond_event", eventRespondRoute);
 
 app.use("/api/v1/refresh_tokens", refreshTokenRoute);
 app.use("/api/v1/Gemini", geminirouter);

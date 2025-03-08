@@ -43,10 +43,29 @@ function EventDesc() {
 
   const handleRespond = () => {
     if (!event) return;
-    setEvent((prevEvent) => ({
-      ...prevEvent,
-      responded: prevEvent.responded + 1,
-    }));
+
+    const data = {
+      eventId: event._id,
+    };
+
+    const config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    };
+
+    // console.log("data", data);
+
+    try {
+      axios.patch("http://localhost:4000/api/v1/respond_event", data, config);
+    } catch (e) {
+      console.log("e: ", e);
+    }
+
+    // setEvent((prevEvent) => ({
+    //   ...prevEvent,
+    //   responded: prevEvent.responded + 1,
+    // }));
   };
 
   const handleShare = () => {
@@ -98,7 +117,12 @@ function EventDesc() {
         </p>
         {event.mapLink && (
           <p className="text-lg text-blue-600 mt-2">
-            <a href={event.mapLink} target="_blank" rel="noopener noreferrer" className="underline">
+            <a
+              href={event.mapLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
               View on Google Maps
             </a>
           </p>
@@ -121,8 +145,6 @@ function EventDesc() {
             }}
           ></div>
         </div>
-
-       
 
         <div className="mt-8">
           <h2 className="text-2xl font-semibold text-gray-800">

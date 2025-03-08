@@ -31,6 +31,8 @@ export async function authenticateToken(req, res, next) {
     const retUser = await userM.findOne({ id });
 
     req.user = retUser;
+    req.userId = id;
+    //   console.log("id", id);
     console.log("Verify token success");
     next();
   });
