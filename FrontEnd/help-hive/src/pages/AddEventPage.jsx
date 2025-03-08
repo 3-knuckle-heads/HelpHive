@@ -93,7 +93,9 @@ const AddEventPage = ({ currentUser }) => {
         navigate("/myevents");
       }, 2000);
     } catch (error) {
-      toast.error("Event creation failed! Please try again.");
+      toast.error(
+        "Event creation failed! Event with same data may already exist."
+      );
       console.error(error);
     }
   };

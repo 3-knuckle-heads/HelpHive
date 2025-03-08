@@ -26,6 +26,19 @@ export async function createEvent_DB(userData, file) {
 
     console.log("userData", userData);
 
+    let uid = title + "_" + organizer + "_" + location;
+    uid.replace(" ", "_");
+    console.log("uid", uid);
+
+    const exists = await eventModel.findOne({ uid });
+
+    if (exists) {
+      console.log("exists", exists);
+      throw new Error(
+        "Event with same title, organizer & location already exists"
+      );
+    }
+
     const nEvent = new eventModel({
       title,
       desc,
@@ -35,6 +48,7 @@ export async function createEvent_DB(userData, file) {
       location,
       image: imageUrl,
       date,
+      uid,
     });
 
     return await nEvent.save();

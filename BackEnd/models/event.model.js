@@ -9,6 +9,7 @@ const eventSchema = new mongoose.Schema({
   location: String,
   image: String,
   date: String,
+  uid: String,
 });
 
 const Event = mongoose.model("Event", eventSchema);
