@@ -3,18 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
-const bangladeshCities = [
-  "Dhaka",
-  "Chattogram",
-  "Khulna",
-  "Rajshahi",
-  "Sylhet",
-  "Barishal",
-  "Rangpur",
-  "Mymensingh",
-  "Cumilla",
-  "Narayanganj",
-];
+// Divisions and their corresponding districts
+const bangladeshLocations = {
+  Dhaka: ["Dhaka", "Gazipur", "Narayanganj", "Tangail", "Manikganj", "Munshiganj"],
+  Chattogram: ["Chattogram", "Cox's Bazar", "Feni", "Khagrachhari", "Rangamati"],
+  Khulna: ["Khulna", "Jessore", "Satkhira", "Bagerhat", "Kushtia"],
+  Rajshahi: ["Rajshahi", "Bogra", "Naogaon", "Pabna", "Sirajganj"],
+  Sylhet: ["Sylhet", "Moulvibazar", "Habiganj", "Sunamganj"],
+  Barishal: ["Barishal", "Patuakhali", "Bhola", "Jhalokathi"],
+  Rangpur: ["Rangpur", "Dinajpur", "Thakurgaon", "Gaibandha", "Nilphamari"],
+  Mymensingh: ["Mymensingh", "Jamalpur", "Sherpur", "Netrokona"],
+};
 
 const AddEventPage = ({ currentUser }) => {
   const navigate = useNavigate();
@@ -24,18 +23,18 @@ const AddEventPage = ({ currentUser }) => {
     needed: "",
     responded: "0",
     organizer: localStorage.getItem("email") || "HelpHive",
-    location: "",
-    image: "",
+    division: "",
+    district: "",
     date: "",
     file: null, // Initialize file as null
   });
-  const [imageUploaded, setImageUploaded] = useState(false); // Track image upload status
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewEvent((prevState) => ({
       ...prevState,
       [name]: value,
+      ...(name === "division" && { district: "" }), // Reset district when division changes
     }));
   };
 
@@ -50,13 +49,14 @@ const AddEventPage = ({ currentUser }) => {
     toast.info("Creating your event");
 
     const formData = new FormData();
-    formData.append("file", newEvent.file); // Append file
+    formData.append("file", newEvent.file);
     formData.append("title", newEvent.title);
     formData.append("desc", newEvent.desc);
     formData.append("needed", newEvent.needed);
     formData.append("responded", newEvent.responded);
     formData.append("organizer", newEvent.organizer);
-    formData.append("location", newEvent.location);
+    formData.append("division", newEvent.division);
+    formData.append("district", newEvent.district);
     formData.append("date", newEvent.date);
 
     const config = {
@@ -75,37 +75,31 @@ const AddEventPage = ({ currentUser }) => {
       toast.success("Event added successfully!");
       console.log(response.data);
 
-      // Clear the form
       setNewEvent({
         title: "",
         desc: "",
         needed: "",
         responded: "0",
-        organizer: localStorage.getItem("email") || "HelpHive",
-        location: "",
-        image: "", // This will be handled by backend
+        organizer:localStorage.getItem("email") || "HelpHive",
+        division: "",
+        district: "",
         date: "",
         file: null,
       });
 
-      // Navigate after 2 seconds
       setTimeout(() => {
         navigate("/myevents");
       }, 2000);
     } catch (error) {
-      toast.error(
-        "Event creation failed! Event with same data may already exist."
-      );
+      toast.error("Event creation failed! Event with same data may already exist.");
       console.error(error);
     }
   };
 
-  // Handle file selection
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
-
     if (file) {
-      setNewEvent((prevState) => ({ ...prevState, file })); // Store file
+      setNewEvent((prevState) => ({ ...prevState, file }));
     }
   };
 
@@ -113,14 +107,10 @@ const AddEventPage = ({ currentUser }) => {
     <div className="min-h-screen bg-gray-100 p-6">
       <ToastContainer position="bottom-right" autoClose={2000} />
       <div className="container mx-auto max-w-4xl bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
-          Add New Event
-        </h2>
+        <h2 className="text-2xl font-extrabold text-gray-800 mb-6">Add New Event</h2>
         <form>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
-              Event Title
-            </label>
+            <label className="block text-sm font-medium text-gray-600">Event Title</label>
             <input
               type="text"
               name="title"
@@ -130,9 +120,7 @@ const AddEventPage = ({ currentUser }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
-              Event Description
-            </label>
+            <label className="block text-sm font-medium text-gray-600">Event Description</label>
             <input
               type="text"
               name="desc"
@@ -143,9 +131,7 @@ const AddEventPage = ({ currentUser }) => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600">
-                Needed Volunteers
-              </label>
+              <label className="block text-sm font-medium text-gray-600">Needed Volunteers</label>
               <input
                 type="number"
                 name="needed"
@@ -155,9 +141,7 @@ const AddEventPage = ({ currentUser }) => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600">
-                Event Date
-              </label>
+              <label className="block text-sm font-medium text-gray-600">Event Date</label>
               <input
                 type="date"
                 name="date"
@@ -168,27 +152,52 @@ const AddEventPage = ({ currentUser }) => {
             </div>
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
-              Location
-            </label>
+            <label className="block text-sm font-medium text-gray-600">Division</label>
             <select
-              name="location"
-              value={newEvent.location}
+              name="division"
+              value={newEvent.division}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-md mt-2"
             >
-              <option value="">Select a city</option>
-              {bangladeshCities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
+              <option value="">Select a Division</option>
+              {Object.keys(bangladeshLocations).map((division) => (
+                <option key={division} value={division}>
+                  {division}
                 </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600">
-              Event Image
-            </label>
+            <label className="block text-sm font-medium text-gray-600">District</label>
+            <select
+              name="district"
+              value={newEvent.district}
+              onChange={handleChange}
+              disabled={!newEvent.division}
+              className="w-full p-3 border border-gray-300 rounded-md mt-2"
+            >
+              <option value="">Select a District</option>
+              {newEvent.division &&
+                bangladeshLocations[newEvent.division].map((district) => (
+                  <option key={district} value={district}>
+                    {district}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600">Google Maps Location Link</label>
+            <input
+              type="text"
+              name="mapLink"
+              value={newEvent.mapLink}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-md mt-2"
+              placeholder="Paste Google Maps link here"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600">Event Image</label>
             <input
               type="file"
               name="image"
