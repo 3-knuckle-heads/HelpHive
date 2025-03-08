@@ -11,7 +11,6 @@ const EventDisplay = ({ event }) => {
         ...prevEvent,
         responded: parseInt(prevEvent.responded) + 1,
       };
-
       return updatedEvent;
     });
   }
@@ -22,10 +21,7 @@ const EventDisplay = ({ event }) => {
   }
 
   return (
-    <div
-      key={thisEvent.id}
-      className="p-4 bg-white shadow-md rounded-lg w-full"
-    >
+    <div key={thisEvent.id} className="p-4 bg-white shadow-md rounded-lg w-full">
       <img
         src={thisEvent.image}
         alt={thisEvent.title}
@@ -48,6 +44,12 @@ const EventDisplay = ({ event }) => {
           }}
         ></div>
       </div>
+
+      {/* 🔹 Show District Here */}
+      <p className="text-md text-gray-700 mt-2">
+        <strong>District:</strong> {thisEvent.district || "Not specified"}
+      </p>
+
       <div className="flex flex-col sm:flex-row justify-between items-center mt-4">
         <div className="flex items-center space-x-2">
           <svg
