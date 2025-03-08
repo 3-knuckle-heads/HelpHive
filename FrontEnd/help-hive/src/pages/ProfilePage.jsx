@@ -21,11 +21,102 @@ const ProfilePage = ({ user, onLogout }) => {
 
   // Skill options
   const skillOptions = [
+    // Event Management & Organization
     { value: "Event Planning", label: "Event Planning" },
+    { value: "Event Coordination", label: "Event Coordination" },
+    { value: "Logistics Management", label: "Logistics Management" },
+    { value: "Volunteer Management", label: "Volunteer Management" },
+    { value: "Project Management", label: "Project Management" },
+    { value: "Public Speaking", label: "Public Speaking" },
+    { value: "Fundraising Events", label: "Fundraising Events" },
+
+    // First Aid & Medical
     { value: "First Aid", label: "First Aid" },
+    { value: "CPR", label: "CPR" },
+    { value: "Medical Assistance", label: "Medical Assistance" },
+    { value: "Elderly Care", label: "Elderly Care" },
+    { value: "Child Care", label: "Child Care" },
+    { value: "Mental Health Support", label: "Mental Health Support" },
+
+    // Food & Hospitality
     { value: "Cooking", label: "Cooking" },
+    { value: "Food Preparation", label: "Food Preparation" },
+    { value: "Serving", label: "Serving" },
+    { value: "Food Safety", label: "Food Safety" },
+    { value: "Hospitality", label: "Hospitality" },
+
+    // Education & Training
     { value: "Teaching", label: "Teaching" },
+    { value: "Tutoring", label: "Tutoring" },
+    { value: "Mentoring", label: "Mentoring" },
+    { value: "Training", label: "Training" },
+    { value: "Public Speaking", label: "Public Speaking" },
+    { value: "Curriculum Development", label: "Curriculum Development" },
+    { value: "Language Skills", label: "Language Skills" },
+
+    // Fundraising & Marketing
     { value: "Fundraising", label: "Fundraising" },
+    { value: "Grant Writing", label: "Grant Writing" },
+    { value: "Marketing", label: "Marketing" },
+    { value: "Social Media Management", label: "Social Media Management" },
+    { value: "Graphic Design", label: "Graphic Design" },
+    { value: "Content Creation", label: "Content Creation" },
+    { value: "Photography", label: "Photography" },
+    { value: "Videography", label: "Videography" },
+
+    // Construction & Manual Labor
+    { value: "Construction", label: "Construction" },
+    { value: "Carpentry", label: "Carpentry" },
+    { value: "Painting", label: "Painting" },
+    { value: "Gardening", label: "Gardening" },
+    { value: "Landscaping", label: "Landscaping" },
+    { value: "General Labor", label: "General Labor" },
+    { value: "Repair Skills", label: "Repair Skills" },
+
+    // Technology & IT
+    { value: "Web Development", label: "Web Development" },
+    { value: "Software Development", label: "Software Development" },
+    { value: "Data Entry", label: "Data Entry" },
+    { value: "IT Support", label: "IT Support" },
+    { value: "Database Management", label: "Database Management" },
+    { value: "Digital Literacy", label: "Digital Literacy" },
+
+    // Arts & Crafts
+    { value: "Arts & Crafts", label: "Arts & Crafts" },
+    { value: "Music", label: "Music" },
+    { value: "Drama", label: "Drama" },
+    { value: "Creative Writing", label: "Creative Writing" },
+    { value: "Painting", label: "Painting" },
+
+    // Administration & Organization
+    { value: "Administrative Support", label: "Administrative Support" },
+    { value: "Data Entry", label: "Data Entry" },
+    { value: "Record Keeping", label: "Record Keeping" },
+    { value: "Organization", label: "Organization" },
+    { value: "Customer Service", label: "Customer Service" },
+    { value: "Translation", label: "Translation" },
+
+    // Environmental
+    {
+      value: "Environmental Conservation",
+      label: "Environmental Conservation",
+    },
+    { value: "Recycling", label: "Recycling" },
+    { value: "Cleanup", label: "Cleanup" },
+    { value: "Sustainable Practices", label: "Sustainable Practices" },
+
+    // Animal Care
+    { value: "Animal Care", label: "Animal Care" },
+    { value: "Pet Walking", label: "Pet Walking" },
+    { value: "Animal Shelter Support", label: "Animal Shelter Support" },
+
+    // Advocacy & Community Outreach
+    { value: "Advocacy", label: "Advocacy" },
+    { value: "Community Outreach", label: "Community Outreach" },
+    {
+      value: "Public Awareness Campaigns",
+      label: "Public Awareness Campaigns",
+    },
   ];
 
   const [allUsers, setAllUsers] = useState([]);
@@ -207,6 +298,20 @@ const ProfilePage = ({ user, onLogout }) => {
             )}
           </div>
 
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-600">
+              Email
+            </label>
+            {
+              <div className="flex items-center justify-between">
+                <p className="text-lg font-medium">
+                  {localStorage.getItem("email") ||
+                    "No contact number provided"}
+                </p>
+              </div>
+            }
+          </div>
+
           {/* Contact Number */}
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-600">
@@ -293,25 +398,26 @@ const ProfilePage = ({ user, onLogout }) => {
           </div>
 
           {/* Save Changes Button (only appears if changes are made) */}
-          {hasChanges && (
-            <div className="mt-6 flex justify-end">
+          <div className="flex flex-row justify-between">
+            {/* Logout Button */}
+            <div className="mt-8 flex justify-end">
               <button
-                onClick={saveProfileChanges}
-                className="px-6 py-2 bg-green-600 text-white rounded-md"
+                onClick={onLogout}
+                className="py-2 px-4 text-red-600 border-2 border-red-600 rounded-md"
               >
-                Save Profile
+                Logout
               </button>
-            </div>
-          )}
-
-          {/* Logout Button */}
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={onLogout}
-              className="py-2 px-4 text-red-600 border-2 border-red-600 rounded-md"
-            >
-              Logout
-            </button>
+            </div>{" "}
+            {hasChanges && (
+              <div className="mt-8 flex justify-end">
+                <button
+                  onClick={saveProfileChanges}
+                  className="px-6 py-2 bg-green-600 text-white rounded-md"
+                >
+                  Save Profile
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
