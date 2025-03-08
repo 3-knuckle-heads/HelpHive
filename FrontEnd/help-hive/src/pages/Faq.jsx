@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 function Faq() {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const lastMessageRef = useRef(null); // Ref for auto-scroll
+
+  useEffect(() => {
+    // Scroll to the latest message when messages update
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const fetchAnswer = async () => {
     if (!question.trim()) return; // Prevent sending empty questions
@@ -42,6 +50,7 @@ function Faq() {
           {messages.map((message, index) => (
             <div
               key={index}
+              ref={index === messages.length - 1 ? lastMessageRef : null} // Attach ref to last message
               className={`p-3 rounded-lg mb-3 max-w-xs ${
                 message.type === "bot" ? "bg-blue-100" : "bg-green-100 self-end"
               }`}

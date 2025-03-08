@@ -61,9 +61,8 @@ async function run(prompt) {
   });
 
   const result = await chatSession.sendMessage(prompt);
-  return res.json({ answer: result.response.text() });
+  return result.response.text();
 }
-
 
 geminirouter.post("/prompt-post", async (req, res) => {
   try {
@@ -72,23 +71,10 @@ geminirouter.post("/prompt-post", async (req, res) => {
     return res.json({ answer: response }); // Assuming run returns the text directly now
   } catch (error) {
     console.error("Error in /prompt-post:", error); // Log the full error
-    return res.status(500).json({ error: "Failed to generate: " + error.message }); // Send error message
+    return res
+      .status(500)
+      .json({ error: "Failed to generate: " + error.message }); // Send error message
   }
 });
 
-async function run(prompt) {
-  try {
-    const chatSession = model.startChat({
-      // ... your chat session setup ...
-    });
-
-    const result = await chatSession.sendMessage(prompt);
-    const answer = result.response.text();
-    console.log("Gemini API response:", answer); // Log the response
-    return answer;
-  } catch (error) {
-    console.error("Error in run function:", error);
-    throw error; // Re-throw the error to be caught by the outer catch block
-  }
-}
 export default geminirouter;
