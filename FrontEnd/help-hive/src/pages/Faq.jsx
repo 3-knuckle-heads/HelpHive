@@ -1,53 +1,83 @@
-import React from "react";
+import { useState } from "react";
+import axios from "axios";
 
-const Faq = () => {
-  const faqs = [
-    {
-      question: "What is Help-Hive?",
-      answer:
-        "Help-Hive is a platform where volunteers and event organizers come together to support those in need by hosting and participating in various events.",
-    },
-    {
-      question: "How can I become a volunteer?",
-      answer:
-        "Simply sign up on our website, create a profile, and browse available volunteer opportunities to join and contribute.",
-    },
-    {
-      question: "Can I host an event on Help-Hive?",
-      answer:
-        "Yes! If you have a cause or event idea, you can apply to become an event host, create an event listing, and recruit volunteers.",
-    },
-    {
-      question: "Is there any cost to join Help-Hive?",
-      answer:
-        "No, joining Help-Hive as a volunteer or event host is completely free! Our goal is to connect people who want to make a difference.",
-    },
-    {
-      question: "How do I stay updated on upcoming events?",
-      answer:
-        "You can subscribe to our newsletter, follow us on social media, or check the events page regularly for new opportunities.",
-    },
-  ];
+function Faq() {
+  const [question, setQuestion] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchAnswer = async () => {
+    if (!question.trim()) return; // Prevent sending empty questions
+
+    setLoading(true);
+    const userMessage = { type: "user", text: question.trim() };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/gemini/prompt-post",
+        { prompt: question.trim() }
+      );
+
+      const botMessage = { type: "bot", text: response.data.answer };
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+    } catch (error) {
+      console.error("Error fetching FAQ answer:", error);
+      const errorMessage = { type: "bot", text: "Failed to get an answer." };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+    }
+
+    setLoading(false);
+    setQuestion("");
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center py-10 px-5 min-h-screen bg-gradient-to-r from-blue-900 to-blue-900 text-white">
-      <h1 className="text-4xl sm:text-5xl font-bold text-center mb-6">
-        Frequently Asked <span className="italic text-yellow-300">Questions</span>
-      </h1>
-      <div className="w-full max-w-3xl">
-        {faqs.map((faq, index) => (
-          <div key={index} className="border-b border-gray-700 py-4">
-            <button className="w-full text-left text-lg font-semibold text-yellow-300 focus:outline-none">
-              {faq.question}
-            </button>
-            <p className="mt-2 text-gray-200 text-base">{faq.answer}</p>
-          </div>
-        ))}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white rounded-lg p-6 shadow-lg max-w-md w-full">
+        <h2 className="text-2xl font-semibold text-blue-600 mb-6 text-center">
+          Help-Hive Chatbot
+        </h2>
+
+        <div className="bg-gray-50 rounded-lg p-4 shadow-inner h-96 overflow-y-auto mb-6">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`p-3 rounded-lg mb-3 max-w-xs ${
+                message.type === "bot" ? "bg-blue-100" : "bg-green-100 self-end"
+              }`}
+            >
+              <strong
+                className={`font-semibold ${
+                  message.type === "bot" ? "text-blue-800" : "text-green-800"
+                }`}
+              >
+                {message.type === "bot" ? "Bot:" : "You:"}
+              </strong>
+              <p className="text-gray-700">{message.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex">
+          <input
+            type="text"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && fetchAnswer()}
+            placeholder="Type your question..."
+            className="flex-grow p-3 border-2 border-blue-600 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onClick={fetchAnswer}
+            disabled={loading}
+            className="bg-blue-600 text-white p-3 rounded-r hover:bg-blue-700 transition duration-200"
+          >
+            {loading ? "Sending..." : "Send"}
+          </button>
+        </div>
       </div>
     </div>
   );
-};
-export default Faq
+}
 
-
-
+export default Faq;
