@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Certificate from "./Certificate";
 import axios from "axios";
 
 function EventDesc() {
@@ -116,6 +117,9 @@ function EventDesc() {
     (responder) => responder.email === userEmail
   );
 
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const toggleCollapse = () => setIsCollapsed((prevState) => !prevState);
+
   if (loading) return <p>Loading...</p>;
   if (!event) return <p>Event not found!</p>;
 
@@ -178,7 +182,7 @@ function EventDesc() {
           </p>
         </div>
 
-        <div className="flex space-x-4 mt-6">
+        <div className="flex space-x-4 mt-6 mb-4">
           <button
             className={`px-6 py-3 rounded-lg transition ${
               hasResponded
@@ -197,9 +201,8 @@ function EventDesc() {
             Share
           </button>
         </div>
-
         {/* Responders List */}
-        <div className="mt-8">
+        <div className="mt-8 mb-6">
           <h2 className="text-2xl font-semibold text-gray-800">Responders</h2>
           {responders.length > 0 ? (
             <div className="max-h-60 overflow-y-auto border p-4 rounded-md mt-4">
@@ -226,6 +229,20 @@ function EventDesc() {
             </div>
           ) : (
             <p className="text-gray-600 mt-2">No responders yet.</p>
+          )}
+        </div>
+        <div className="mt-6">
+          <button
+            onClick={toggleCollapse}
+            className="w-full text-left bg-blue-400 text-white font-bold py-2 px-5 rounded-md shadow-md hover:bg-blue-700 transition"
+          >
+            {isCollapsed ? "Show Certificate" : "Hide Certificate"}
+          </button>
+
+          {!isCollapsed && (
+            <div className="mt-4">
+              <Certificate name="Pabak Dev" course="HelpHive" />
+            </div>
           )}
         </div>
       </div>
