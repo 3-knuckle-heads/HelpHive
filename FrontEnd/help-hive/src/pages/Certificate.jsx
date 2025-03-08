@@ -49,10 +49,10 @@ const Certificate = ({ name, course }) => {
             className="font-bold italic absolute text-center w-full"
             style={nameStyle}
           >
-            {name}
+            {name || "Pabak Dev"}
           </h1>
           <p className="italic absolute text-center w-full" style={courseStyle}>
-            {course}
+            {course || "HelpHive"}
           </p>
         </div>
       </div>
