@@ -8,6 +8,7 @@ import userGetRoute from "./routes/userGet.route.js";
 import eventCreateRoute from "./routes/eventCreate.route.js";
 import eventGetRoute from "./routes/eventGet.route.js";
 import refreshTokenRoute from "./routes/refreshTokens.route.js";
+import geminirouter from "./routes/geminirouter.js";
 
 const app = express();
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use("/api/v1/create_event", eventCreateRoute);
 app.use("/api/v1/events", eventGetRoute);
 
 app.use("/api/v1/refresh_tokens", refreshTokenRoute);
+app.use("/api/v1/Gemini", geminirouter);
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
