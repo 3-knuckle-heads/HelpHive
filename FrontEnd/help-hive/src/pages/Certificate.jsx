@@ -1,71 +1,85 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useCallback } from 'react';
+import { toPng } from 'html-to-image';
+import certificateTemplate from '../assets/Certificateimage.png';
 
-const CertificatePage = () => {
-  const [events, setEvents] = useState([]);
+const Certificate = () => {
+    const ref = useRef(null);
+    const [name, setName] = useState('');
+    const [course, setCourse] = useState('');
 
-  useEffect(() => {
-    // Adding a dummy event to localStorage if none exist
-    let storedEvents = JSON.parse(localStorage.getItem("myEvents")) || [];
-    if (storedEvents.length === 0) {
-      storedEvents = [
-        { id: 1, title: "Tree Plantation", responded: true, completed: false }
-      ];
-      localStorage.setItem("myEvents", JSON.stringify(storedEvents));
-    }
-    setEvents(storedEvents);
-  }, []);
+    // Customize text position and font size here
+    const nameStyle = {
+        top: '13rem',
+        left: '0',
+        fontSize: '5rem'
+    };
 
-  const handleDownload = (event) => {
-    alert(`Downloading certificate for ${event.title}`);
-  };
+    const courseStyle = {
+        top: '22rem',
+        left: '0',
+        fontSize: '2rem'
+    };
 
-  const handleApplyForCertificate = (event) => {
-    alert(`Applied for a certificate for ${event.title}`);
-  };
+    const onButtonClick = useCallback(() => {
+        if (ref.current === null) return;
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="container mx-auto max-w-4xl bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-extrabold text-gray-800 mb-6">Certificates</h2>
-        <p className="text-gray-600 mb-4">Here are your event participations:</p>
+        toPng(ref.current, { cacheBust: true })
+            .then((dataUrl) => {
+                const link = document.createElement('a');
+                link.download = 'HelpHive_Certificate.png';
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch((err) => {
+                console.error('Error generating image:', err);
+            });
+    }, [ref]);
 
-        {events.length === 0 ? (
-          <p className="text-gray-500">No events found.</p>
-        ) : (
-          <ul>
-            {events.map((event) => (
-              <li
-                key={event.id}
-                className="p-4 mb-4 border rounded-lg flex justify-between items-center"
-              >
-                <div>
-                  <h3 className="text-lg font-semibold">{event.title}</h3>
-                  <p className="text-gray-600">
-                    Status: {event.completed ? "Completed" : "Ongoing"}
-                  </p>
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+            <div className="mb-4 w-full max-w-md">
+                <input 
+                    type="text" 
+                    placeholder="Enter Name" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    className="w-full p-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+            <div className="mb-4 w-full max-w-md">
+                <input 
+                    type="text" 
+                    placeholder="Enter Course Name" 
+                    value={course} 
+                    onChange={(e) => setCourse(e.target.value)} 
+                    className="w-full p-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+            <div ref={ref} className="relative w-full max-w-3xl h-auto bg-red-500 rounded-lg shadow-lg overflow-hidden">
+                <img src={certificateTemplate} alt="Certificate" className="w-full h-auto object-cover" />
+                <div className="absolute inset-0 text-black">
+                    <h1 
+                        className="font-bold italic absolute text-center w-full" 
+                        style={{ top: nameStyle.top, left: nameStyle.left, fontSize: nameStyle.fontSize }}
+                    >
+                        {name}
+                    </h1>
+                    <p 
+                        className="italic absolute text-center w-full" 
+                        style={{ top: courseStyle.top, left: courseStyle.left, fontSize: courseStyle.fontSize }}
+                    >
+                        {course}
+                    </p>
                 </div>
-                {event.completed ? (
-                  <button
-                    onClick={() => handleDownload(event)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                  >
-                    Download Certificate
-                  </button>
-                ) : event.responded ? (
-                  <button
-                    onClick={() => handleApplyForCertificate(event)}
-                    className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-                  >
-                    Apply for Certificate
-                  </button>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
-  );
+            </div>
+            <button 
+                onClick={onButtonClick} 
+                className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
+            >
+                Download Certificate
+            </button>
+        </div>
+    );
 };
 
-export default CertificatePage;
+export default Certificate;

@@ -1,5 +1,6 @@
 import createEvent_DB from "../services/eventCreateService.js";
 import getAllEvents_DB from "../services/eventGetService.js";
+import respondToEvent_DB from "../services/eventRespondService.js";
 import respondToEvent from "../services/eventRespondService.js";
 
 export async function createEvent(req, res) {
@@ -27,11 +28,14 @@ export async function getAllEvents(req, res) {
   }
 }
 
-export async function respondToEventController(req, res) {
+export async function respondToEventC(req, res) {
   try {
-    const { eventId, userId } = req.body;
+    const { eventId } = req.body;
+    const userId = req.userId;
+    console.log("userId", userId);
+    console.log("eventId", eventId);
 
-    const updatedEvent = await respondToEvent(eventId, userId);
+    const updatedEvent = await respondToEvent_DB(eventId, userId);
 
     res.status(200).json({
       success: true,

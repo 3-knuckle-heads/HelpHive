@@ -1,0 +1,27 @@
+.container{
+    height: 400px;
+    width: 560px;
+    background: RED;
+    position: relative;
+}
+.content{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+.content h1{
+    margin-top: 130px;
+    margin-left: 190px;
+
+}
+.content p{
+    margin-left: 200px;
+    margin-left: 100px;
+}
+.button{
+    height: 40px;
+    width: 100px;
+    border: none;
+}
