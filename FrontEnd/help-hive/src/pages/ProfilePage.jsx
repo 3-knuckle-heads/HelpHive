@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
 const ProfilePage = ({ user, onLogout }) => {
@@ -243,7 +244,6 @@ const ProfilePage = ({ user, onLogout }) => {
     setIsEditingContact(false);
   };
 
-  // Handle Skills Change
   const saveSkills = () => {
     const selectedSkillValues = selectedSkills.map((skill) => skill.value);
     setUpdatedUser((prev) => ({
@@ -257,33 +257,20 @@ const ProfilePage = ({ user, onLogout }) => {
     const file = event.target.files[0];
     if (file) {
       setNewProfileImage(file);
+      setUpdatedUser((prev) => ({
+        ...prev,
+        profilePic: file,
+      }));
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
-    } else {
-      setNewProfileImage(null);
-      setProfileImagePreview(null);
     }
   };
 
-  const saveProfilePicture = () => {
-    if (newProfileImage) {
-      setUpdatedUser((prev) => ({
-        ...prev,
-        profilePic: newProfileImage,
-      }));
-      //   setProfileImagePreview(null);
-      setNewProfileImage(null);
-      setIsEditingProfilePicture(false);
-    }
-  };
-
-  // Function to Save All Changes (send to backend)
   const saveProfileChanges = async () => {
     if (hasChanges) {
-      saveProfilePicture();
       console.log("updatedUser", updatedUser);
 
       try {
@@ -306,21 +293,22 @@ const ProfilePage = ({ user, onLogout }) => {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         };
-        const res = await axios.put(
-          "http://localhost:4000/api/v1/update_user",
-          formData,
-          config
-        );
-
+        const res = await axios
+          .put("http://localhost:4000/api/v1/update_user", formData, config)
+          .then((res) => {
+            toast.success("Profile updated");
+          });
         console.log(res.data);
       } catch (err) {
         console.log("err: ", err);
+        toast.error("An error occured");
       }
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
+      <ToastContainer position="bottom-right" autoClose={2000} />
       <div className="flex justify-center items-center bg-gray-50 p-6 flex-1 w-full">
         <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-6xl relative flex flex-col justify-center">
           {/* Profile Picture */}
