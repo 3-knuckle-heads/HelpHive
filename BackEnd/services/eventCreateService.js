@@ -24,6 +24,8 @@ export async function createEvent_DB(userData, file) {
     const { title, desc, needed, responded, organizer, location, date } =
       userData;
 
+    console.log("userData", userData);
+
     const nEvent = new eventModel({
       title,
       desc,

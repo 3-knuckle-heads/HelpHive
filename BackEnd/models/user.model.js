@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
     enum: ["volunteer", "host"],
     default: "volunteer",
   },
+  contactNumber: String,
+  skills: String,
 });
 
 const User = mongoose.model("User", userSchema);

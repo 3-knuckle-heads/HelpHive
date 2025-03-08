@@ -61,7 +61,7 @@ const AddEventPage = ({ currentUser }) => {
 
     const config = {
       headers: {
-        "Content-Type": "multipart/form-data", // Important for file upload
+        "Content-Type": "multipart/form-data",
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     };

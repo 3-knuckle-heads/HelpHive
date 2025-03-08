@@ -177,6 +177,29 @@ const ProfilePage = ({ user, onLogout }) => {
     }
   }, [allUsers]);
 
+  const [newProfileImage, setNewProfileImage] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
+  const [isEditingProfilePicture, setIsEditingProfilePicture] = useState(false);
+
+  useEffect(() => {
+    const isChanged =
+      newFirstName !== user.firstName ||
+      newLastName !== user.lastName ||
+      newContact !== (user.contactNumber || "") ||
+      JSON.stringify(selectedSkills.map((s) => s.value)) !==
+        JSON.stringify(user.skills || []) ||
+      newProfileImage !== null;
+
+    setHasChanges(isChanged);
+  }, [
+    newFirstName,
+    newLastName,
+    newContact,
+    selectedSkills,
+    user,
+    newProfileImage,
+  ]);
+
   useEffect(() => {
     setUpdatedUser(user);
     setNewFirstName(user.firstName);
@@ -226,10 +249,69 @@ const ProfilePage = ({ user, onLogout }) => {
     setIsEditingSkills(false);
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setNewProfileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setNewProfileImage(null);
+      setProfileImagePreview(null);
+    }
+  };
+
+  const saveProfilePicture = () => {
+    if (newProfileImage) {
+      setUpdatedUser((prev) => ({
+        ...prev,
+        profilePic: newProfileImage,
+      }));
+      //   setProfileImagePreview(null);
+      setNewProfileImage(null);
+      setIsEditingProfilePicture(false);
+    }
+  };
+
   // Function to Save All Changes (send to backend)
-  const saveProfileChanges = () => {
+  const saveProfileChanges = async () => {
     if (hasChanges) {
-      //updateUser(updatedUser);
+      saveProfilePicture();
+      console.log("updatedUser", updatedUser);
+
+      try {
+        const formData = new FormData();
+        formData.append("file", updatedUser.profilePic); // Append file
+        formData.append("firstName", updatedUser.firstName);
+        formData.append("lastName", updatedUser.lastName);
+        formData.append("email", updatedUser.email);
+        formData.append("password", updatedUser.password);
+        formData.append("role", updatedUser.role);
+        formData.append("skills", updatedUser.skills);
+        formData.append("contactNumber", updatedUser.contactNumber);
+        //       formData.append("skills", updatedUser.skills);
+
+        // console.log("updatedUserForm", formData);
+
+        const config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        const res = await axios.put(
+          "http://localhost:4000/api/v1/update_user",
+          formData,
+          config
+        );
+
+        console.log(res.data);
+      } catch (err) {
+        console.log("err: ", err);
+      }
     }
   };
 
@@ -240,9 +322,33 @@ const ProfilePage = ({ user, onLogout }) => {
           {/* Profile Picture */}
           <div className="relative w-48 h-48 mx-auto">
             <img
-              src={updatedUser.profilePic || "../assets/flood.jpg"}
+              src={
+                profileImagePreview ||
+                updatedUser.profilePic ||
+                "../assets/flood.jpg"
+              }
               alt="Profile"
               className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
+            />
+            <label
+              htmlFor="profile-image-upload"
+              className="absolute bottom-2 right-2 bg-gray-100 rounded-full p-2 cursor-pointer hover:bg-gray-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
+              </svg>
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              id="profile-image-upload"
+              className="hidden" // Hide the actual input
             />
           </div>
 

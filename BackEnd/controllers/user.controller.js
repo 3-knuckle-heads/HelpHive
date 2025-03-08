@@ -1,5 +1,6 @@
 import createUser_DB from "../services/userCreateService.js";
 import loginUser_DB from "../services/userLoginService.js";
+import updateUser_DB from "../services/userUpdateService.js";
 import getAllUsers_DB from "../services/userGetService.js";
 import { generateToken, generateRefreshToken } from "../Utils/jwtUtils.js";
 
@@ -56,6 +57,17 @@ export async function getAllUsers(req, res) {
   try {
     const users = await getAllUsers_DB();
     res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+}
+
+export async function updateUser(req, res) {
+  try {
+    const data = req.body;
+    const file = req.file;
+
+    await updateUser_DB(data, file);
   } catch (error) {
     res.status(500).json({ message: error });
   }

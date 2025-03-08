@@ -5,6 +5,7 @@ import cors from "cors";
 import userCreateRoute from "./routes/userCreate.route.js";
 import userLoginRoute from "./routes/userLogin.route.js";
 import userGetRoute from "./routes/userGet.route.js";
+import userUpdateRoute from "./routes/userUpdate.route.js";
 import eventCreateRoute from "./routes/eventCreate.route.js";
 import eventGetRoute from "./routes/eventGet.route.js";
 import refreshTokenRoute from "./routes/refreshTokens.route.js";
@@ -28,6 +29,7 @@ app.get("/api/v1/", (req, res) => {
 app.use("/api/v1/signup", userCreateRoute);
 app.use("/api/v1/login", userLoginRoute);
 app.use("/api/v1/get_users", userGetRoute);
+app.use("/api/v1/update_user", userUpdateRoute);
 
 app.use("/api/v1/create_event", eventCreateRoute);
 app.use("/api/v1/events", eventGetRoute);
