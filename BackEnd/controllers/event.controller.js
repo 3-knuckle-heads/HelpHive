@@ -1,5 +1,6 @@
 import createEvent_DB from "../services/eventCreateService.js";
 import getAllEvents_DB from "../services/eventGetService.js";
+import respondToEvent from "../services/eventRespondService.js";
 
 export async function createEvent(req, res) {
   try {
@@ -23,5 +24,21 @@ export async function getAllEvents(req, res) {
     res.json(events);
   } catch (error) {
     res.status(500).json({ message: error });
+  }
+}
+
+export async function respondToEventController(req, res) {
+  try {
+    const { eventId, userId } = req.body;
+
+    const updatedEvent = await respondToEvent(eventId, userId);
+
+    res.status(200).json({
+      success: true,
+      message: "User responded successfully",
+      event: updatedEvent,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
   }
 }
