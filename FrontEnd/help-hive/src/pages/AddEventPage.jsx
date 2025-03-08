@@ -23,7 +23,7 @@ const AddEventPage = ({ currentUser }) => {
     desc: "",
     needed: "",
     responded: "0",
-    organizer: currentUser || "HelpHive",
+    organizer: localStorage.getItem("email") || "HelpHive",
     location: "",
     image: "",
     date: "",
@@ -81,7 +81,7 @@ const AddEventPage = ({ currentUser }) => {
         desc: "",
         needed: "",
         responded: "0",
-        organizer: currentUser || "HelpHive",
+        organizer: localStorage.getItem("email") || "HelpHive",
         location: "",
         image: "", // This will be handled by backend
         date: "",

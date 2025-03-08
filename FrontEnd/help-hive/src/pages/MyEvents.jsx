@@ -54,9 +54,11 @@ const MyEvents = () => {
           <p className="text-gray-600">Loading events...</p>
         ) : allEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {allEvents.map((event) => (
-              <EventDisplay key={event.id} event={event} />
-            ))}
+            {allEvents.map((event) =>
+              event.organizer === localStorage.getItem("email") ? (
+                <EventDisplay key={event.id} event={event} />
+              ) : null
+            )}
           </div>
         ) : (
           <p className="text-gray-600">You haven't added any events yet.</p>
