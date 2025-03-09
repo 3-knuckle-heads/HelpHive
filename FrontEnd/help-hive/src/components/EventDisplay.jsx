@@ -21,7 +21,10 @@ const EventDisplay = ({ event }) => {
   }
 
   return (
-    <div key={thisEvent.id} className="p-4 bg-white shadow-md rounded-lg w-full">
+    <div
+      key={thisEvent.id}
+      className="p-4 bg-white shadow-md rounded-lg w-full"
+    >
       <img
         src={thisEvent.image}
         alt={thisEvent.title}
@@ -75,12 +78,12 @@ const EventDisplay = ({ event }) => {
           >
             Details
           </button>
-          <button
+          {/* <button
             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
             onClick={RespondButtonHandler}
           >
             Respond
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

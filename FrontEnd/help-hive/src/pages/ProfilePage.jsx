@@ -17,7 +17,9 @@ const ProfilePage = ({ user, onLogout }) => {
 
   const [isEditingSkills, setIsEditingSkills] = useState(false);
   const [selectedSkills, setSelectedSkills] = useState(
-    user.skills?.map((skill) => ({ value: skill, label: skill })) || []
+    Array.isArray(user.skills)
+      ? user.skills.map((skill) => ({ value: skill, label: skill }))
+      : []
   );
 
   // Skill options
@@ -211,7 +213,9 @@ const ProfilePage = ({ user, onLogout }) => {
     setNewLastName(user.lastName);
     setNewContact(user.contactNumber || "");
     setSelectedSkills(
-      user.skills?.map((skill) => ({ value: skill, label: skill })) || []
+      Array.isArray(user.skills)
+        ? user.skills.map((skill) => ({ value: skill, label: skill }))
+        : []
     );
     setHasChanges(false);
   }, [user]);
